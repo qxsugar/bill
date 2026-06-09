@@ -1,0 +1,17 @@
+# 二进制
+bill-api
+/bill-api
+*.exe
+
+# 依赖与构建产物
+/vendor/
+
+# 环境与日志
+*.log
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
