@@ -114,6 +114,7 @@ func (app *Application) registerApi() {
 			authed.POST("/room.create", kit.TranslateFunc(app.roomRouter.Create))
 			authed.POST("/room.join", kit.TranslateFunc(app.roomRouter.Join))
 			authed.POST("/room.leave", kit.TranslateFunc(app.roomRouter.Leave))
+			authed.GET("/room.detail", kit.TranslateFunc(app.roomRouter.Detail))
 		}
 	}
 }

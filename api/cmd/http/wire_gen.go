@@ -28,11 +28,10 @@ func InitializeApplication() (*Application, func(), error) {
 	memberDao := dao.NewRoomMemberDao(db)
 	transactionDao := dao.NewTransactionDao(db)
 	logDao := dao.NewRoomLogDao(db)
-	_ = transactionDao
 
 	userService := service.NewUserService(userDao)
 	authService := service.NewAuthService(userService)
-	roomService := service.NewRoomService(roomDao, memberDao, logDao, userDao)
+	roomService := service.NewRoomService(roomDao, memberDao, logDao, userDao, transactionDao)
 
 	userRouter := router.NewUserRouter(userService, log)
 	authRouter := router.NewAuthRouter(authService, log)

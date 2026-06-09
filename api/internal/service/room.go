@@ -22,11 +22,12 @@ func (noopBroadcaster) BroadcastRoomUpdated(int64) {}
 func (noopBroadcaster) BroadcastSettled(int64)     {}
 
 type RoomService struct {
-	roomDao    *dao.RoomDao
-	memberDao  *dao.RoomMemberDao
-	logDao     *dao.RoomLogDao
-	userDao    *dao.UserDao
-	broadcaster Broadcaster
+	roomDao        *dao.RoomDao
+	memberDao      *dao.RoomMemberDao
+	logDao         *dao.RoomLogDao
+	userDao        *dao.UserDao
+	transactionDao *dao.TransactionDao
+	broadcaster    Broadcaster
 }
 
 func NewRoomService(
@@ -34,13 +35,15 @@ func NewRoomService(
 	memberDao *dao.RoomMemberDao,
 	logDao *dao.RoomLogDao,
 	userDao *dao.UserDao,
+	transactionDao *dao.TransactionDao,
 ) *RoomService {
 	return &RoomService{
-		roomDao:     roomDao,
-		memberDao:   memberDao,
-		logDao:      logDao,
-		userDao:     userDao,
-		broadcaster: noopBroadcaster{},
+		roomDao:        roomDao,
+		memberDao:      memberDao,
+		logDao:         logDao,
+		userDao:        userDao,
+		transactionDao: transactionDao,
+		broadcaster:    noopBroadcaster{},
 	}
 }
 

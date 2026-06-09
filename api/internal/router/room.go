@@ -1,6 +1,8 @@
 package router
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/qxsugar/bill/api/internal/middleware"
 	"github.com/qxsugar/bill/api/internal/service"
@@ -60,4 +62,17 @@ func (r *RoomRouter) Leave(ctx *gin.Context) (any, error) {
 		return nil, wrapErr(err)
 	}
 	return gin.H{"ok": true}, nil
+}
+
+// Detail 返回房间快照（房间 + 成员 + 消息），供进入房间与 ws 推送后拉取。
+func (r *RoomRouter) Detail(ctx *gin.Context) (any, error) {
+	roomId, err := strconv.ParseInt(ctx.Query("room_id"), 10, 64)
+	if err != nil || roomId == 0 {
+		return nil, kit.NewInvalidArgumentError()
+	}
+	snap, err := r.roomService.Snapshot(roomId)
+	if err != nil {
+		return nil, wrapErr(err)
+	}
+	return snap, nil
 }

@@ -26,5 +26,12 @@ func (d *TransactionDao) ListByRoomId(roomId int64) ([]*model.Transaction, error
 	return list, d.db.Where("room_id = ?", roomId).Order("id desc").Find(&list).Error
 }
 
+// ListValidByRoomId 返回房间内有效（未撤销）的交易，按时间倒序（新→旧）。
+func (d *TransactionDao) ListValidByRoomId(roomId int64) ([]*model.Transaction, error) {
+	var list []*model.Transaction
+	return list, d.db.Where("room_id = ? and status = ?", roomId, model.TransactionStatusValid).
+		Order("id desc").Find(&list).Error
+}
+
 func (d *TransactionDao) Create(item *model.Transaction) error { return d.db.Create(item).Error }
 func (d *TransactionDao) Save(item *model.Transaction) error   { return d.db.Save(item).Error }
