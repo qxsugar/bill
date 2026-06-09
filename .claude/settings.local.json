@@ -10,7 +10,8 @@
       "Bash(go build *)",
       "Bash(echo \"BUILD_EXIT=$?\")",
       "Bash(git add *)",
-      "Bash(git commit -q -m 'feat\\(api\\): 微信登录 code2session + JWT 鉴权中间件 *)"
+      "Bash(git commit -q -m 'feat\\(api\\): 微信登录 code2session + JWT 鉴权中间件 *)",
+      "Bash(git commit -q -m 'feat\\(api\\): 用户信息修改与预设头像 *)"
     ]
   }
 }

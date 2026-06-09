@@ -105,6 +105,8 @@ func (app *Application) registerApi() {
 		authed.Use(middleware.Auth(app.authService))
 		{
 			authed.GET("/user.detail", kit.TranslateFunc(app.userRouter.Detail))
+			authed.POST("/user.update", kit.TranslateFunc(app.userRouter.Update))
+			authed.GET("/user.presetAvatars", kit.TranslateFunc(app.userRouter.PresetAvatars))
 		}
 	}
 }
