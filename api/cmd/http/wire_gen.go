@@ -24,17 +24,21 @@ func InitializeApplication() (*Application, func(), error) {
 	}
 
 	userDao := dao.NewUserDao(db)
-	_ = dao.NewRoomDao(db)
-	_ = dao.NewRoomMemberDao(db)
-	_ = dao.NewTransactionDao(db)
-	_ = dao.NewRoomLogDao(db)
+	roomDao := dao.NewRoomDao(db)
+	memberDao := dao.NewRoomMemberDao(db)
+	transactionDao := dao.NewTransactionDao(db)
+	logDao := dao.NewRoomLogDao(db)
+	_ = transactionDao
 
 	userService := service.NewUserService(userDao)
 	authService := service.NewAuthService(userService)
+	roomService := service.NewRoomService(roomDao, memberDao, logDao, userDao)
+
 	userRouter := router.NewUserRouter(userService, log)
 	authRouter := router.NewAuthRouter(authService, log)
+	roomRouter := router.NewRoomRouter(roomService, log)
 
-	application := NewApplication(log, db, authService, userRouter, authRouter)
+	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter)
 	cleanup := func() {
 		dbCleanup()
 		loggerCleanup()

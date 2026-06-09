@@ -28,6 +28,7 @@ type Application struct {
 	authService *service.AuthService
 	userRouter  *router.UserRouter
 	authRouter  *router.AuthRouter
+	roomRouter  *router.RoomRouter
 }
 
 func NewApplication(
@@ -36,6 +37,7 @@ func NewApplication(
 	authService *service.AuthService,
 	userRouter *router.UserRouter,
 	authRouter *router.AuthRouter,
+	roomRouter *router.RoomRouter,
 ) *Application {
 	return &Application{
 		g:           gin.New(),
@@ -44,6 +46,7 @@ func NewApplication(
 		authService: authService,
 		userRouter:  userRouter,
 		authRouter:  authRouter,
+		roomRouter:  roomRouter,
 	}
 }
 
@@ -107,6 +110,10 @@ func (app *Application) registerApi() {
 			authed.GET("/user.detail", kit.TranslateFunc(app.userRouter.Detail))
 			authed.POST("/user.update", kit.TranslateFunc(app.userRouter.Update))
 			authed.GET("/user.presetAvatars", kit.TranslateFunc(app.userRouter.PresetAvatars))
+
+			authed.POST("/room.create", kit.TranslateFunc(app.roomRouter.Create))
+			authed.POST("/room.join", kit.TranslateFunc(app.roomRouter.Join))
+			authed.POST("/room.leave", kit.TranslateFunc(app.roomRouter.Leave))
 		}
 	}
 }

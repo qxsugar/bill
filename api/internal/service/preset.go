@@ -1,6 +1,13 @@
 package service
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
+
+// nowTime 返回当前时间，集中一处便于测试替换。
+func nowTime() time.Time { return time.Now() }
+
 
 // PresetAvatars 预设头像列表（前端「修改信息-头像选择」展示同一份）。
 // 使用 emoji 占位，前端可直接渲染；后续可替换为 CDN 图片 URL。
