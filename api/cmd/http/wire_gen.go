@@ -32,12 +32,14 @@ func InitializeApplication() (*Application, func(), error) {
 	userService := service.NewUserService(userDao)
 	authService := service.NewAuthService(userService)
 	roomService := service.NewRoomService(roomDao, memberDao, logDao, userDao, transactionDao)
+	transactionService := service.NewTransactionService(db, roomDao, memberDao, transactionDao, logDao, userDao)
 
 	userRouter := router.NewUserRouter(userService, log)
 	authRouter := router.NewAuthRouter(authService, log)
 	roomRouter := router.NewRoomRouter(roomService, log)
+	transactionRouter := router.NewTransactionRouter(transactionService, log)
 
-	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter)
+	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter, transactionRouter)
 	cleanup := func() {
 		dbCleanup()
 		loggerCleanup()

@@ -29,6 +29,7 @@ type Application struct {
 	userRouter  *router.UserRouter
 	authRouter  *router.AuthRouter
 	roomRouter  *router.RoomRouter
+	txRouter    *router.TransactionRouter
 }
 
 func NewApplication(
@@ -38,6 +39,7 @@ func NewApplication(
 	userRouter *router.UserRouter,
 	authRouter *router.AuthRouter,
 	roomRouter *router.RoomRouter,
+	txRouter *router.TransactionRouter,
 ) *Application {
 	return &Application{
 		g:           gin.New(),
@@ -47,6 +49,7 @@ func NewApplication(
 		userRouter:  userRouter,
 		authRouter:  authRouter,
 		roomRouter:  roomRouter,
+		txRouter:    txRouter,
 	}
 }
 
@@ -115,6 +118,10 @@ func (app *Application) registerApi() {
 			authed.POST("/room.join", kit.TranslateFunc(app.roomRouter.Join))
 			authed.POST("/room.leave", kit.TranslateFunc(app.roomRouter.Leave))
 			authed.GET("/room.detail", kit.TranslateFunc(app.roomRouter.Detail))
+
+			authed.POST("/transaction.expense", kit.TranslateFunc(app.txRouter.Expense))
+			authed.POST("/transaction.revoke", kit.TranslateFunc(app.txRouter.Revoke))
+			authed.POST("/transaction.thank", kit.TranslateFunc(app.txRouter.Thank))
 		}
 	}
 }

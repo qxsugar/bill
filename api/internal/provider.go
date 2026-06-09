@@ -26,10 +26,12 @@ var ServiceProviderSet = wire.NewSet(
 	service.NewUserService,
 	service.NewAuthService,
 	service.NewRoomService,
+	service.NewTransactionService,
 )
 
 var RouterProviderSet = wire.NewSet(
 	router.NewUserRouter,
 	router.NewAuthRouter,
 	router.NewRoomRouter,
+	router.NewTransactionRouter,
 )
