@@ -62,3 +62,14 @@ CREATE TABLE IF NOT EXISTS `bill_room_logs` (
   PRIMARY KEY (`id`),
   KEY `idx_bill_room_logs_room_id` (`room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='房间日志表';
+
+CREATE TABLE IF NOT EXISTS `bill_card_trackers` (
+  `id`         bigint     NOT NULL AUTO_INCREMENT,
+  `user_id`    bigint     NOT NULL DEFAULT 0 COMMENT '所属用户',
+  `deck_count` int        NOT NULL DEFAULT 1 COMMENT '牌副数',
+  `counts`     json       NOT NULL COMMENT '各牌面剩余数量 {"BJ":1,"SJ":1,"A":4,...}',
+  `created_at` timestamp  NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_bill_card_trackers_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='扑克记牌器状态表';

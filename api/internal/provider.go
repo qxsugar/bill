@@ -20,6 +20,7 @@ var DaoProviderSet = wire.NewSet(
 	dao.NewRoomMemberDao,
 	dao.NewTransactionDao,
 	dao.NewRoomLogDao,
+	dao.NewCardTrackerDao,
 )
 
 var ServiceProviderSet = wire.NewSet(
@@ -27,6 +28,7 @@ var ServiceProviderSet = wire.NewSet(
 	service.NewAuthService,
 	service.NewRoomService,
 	service.NewTransactionService,
+	service.NewCardTrackerService,
 )
 
 var RouterProviderSet = wire.NewSet(
@@ -34,4 +36,5 @@ var RouterProviderSet = wire.NewSet(
 	router.NewAuthRouter,
 	router.NewRoomRouter,
 	router.NewTransactionRouter,
+	router.NewCardTrackerRouter,
 )
