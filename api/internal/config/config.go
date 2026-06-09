@@ -21,6 +21,14 @@ func Setup() {
 
 	viper.SetDefault("cors.allowed_origins", "*")
 
+	// 微信小程序登录（code2session）。留空时走 dev 兜底：openid = dev_<code>
+	viper.SetDefault("wechat.appid", "")
+	viper.SetDefault("wechat.secret", "")
+
+	// JWT 签发密钥与有效期（小时）
+	viper.SetDefault("jwt.secret", "bill-dev-secret-change-me")
+	viper.SetDefault("jwt.expire_hours", 24*30)
+
 	// 数据库连接串：BILL_DEFAULT_DATABASE
 	// 例：bill:2ZhwKarp@tcp(ppapi.cn:3306)/bill?charset=utf8mb4&parseTime=True&loc=Local
 	viper.SetDefault("default.database", "bill:2ZhwKarp@tcp(ppapi.cn:3306)/bill?charset=utf8mb4&parseTime=True&loc=Local")

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -oE '>[^<>]{1,60}<' data/记账小程序.svg)",
+      "Bash(grep -vE '^\\\\s*$')",
+      "Bash(grep -oE '>[^<>]{1,80}<' data/记账小程序.svg)",
+      "Bash(go get *)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(go mod *)",
+      "Bash(go build *)",
+      "Bash(echo \"BUILD_EXIT=$?\")",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'feat\\(api\\): 微信登录 code2session + JWT 鉴权中间件 *)"
+    ]
+  }
+}

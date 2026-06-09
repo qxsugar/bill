@@ -30,9 +30,11 @@ func InitializeApplication() (*Application, func(), error) {
 	_ = dao.NewRoomLogDao(db)
 
 	userService := service.NewUserService(userDao)
+	authService := service.NewAuthService(userService)
 	userRouter := router.NewUserRouter(userService, log)
+	authRouter := router.NewAuthRouter(authService, log)
 
-	application := NewApplication(log, db, userRouter)
+	application := NewApplication(log, db, authService, userRouter, authRouter)
 	cleanup := func() {
 		dbCleanup()
 		loggerCleanup()

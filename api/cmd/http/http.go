@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/qxsugar/bill/api/internal/middleware"
 	"github.com/qxsugar/bill/api/internal/router"
+	"github.com/qxsugar/bill/api/internal/service"
 	"github.com/qxsugar/pkg/kit"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -21,22 +22,28 @@ import (
 )
 
 type Application struct {
-	g          *gin.Engine
-	logger     *zap.SugaredLogger
-	db         *gorm.DB
-	userRouter *router.UserRouter
+	g           *gin.Engine
+	logger      *zap.SugaredLogger
+	db          *gorm.DB
+	authService *service.AuthService
+	userRouter  *router.UserRouter
+	authRouter  *router.AuthRouter
 }
 
 func NewApplication(
 	logger *zap.SugaredLogger,
 	db *gorm.DB,
+	authService *service.AuthService,
 	userRouter *router.UserRouter,
+	authRouter *router.AuthRouter,
 ) *Application {
 	return &Application{
-		g:          gin.New(),
-		logger:     logger.Named("gateway"),
-		db:         db,
-		userRouter: userRouter,
+		g:           gin.New(),
+		logger:      logger.Named("gateway"),
+		db:          db,
+		authService: authService,
+		userRouter:  userRouter,
+		authRouter:  authRouter,
 	}
 }
 
@@ -90,6 +97,14 @@ func (app *Application) registerApi() {
 
 	api := app.g.Group("/api/v1")
 	{
-		api.GET("/user.detail", kit.TranslateFunc(app.userRouter.Detail))
+		// 公开接口（无需登录）
+		api.POST("/auth.login", kit.TranslateFunc(app.authRouter.Login))
+
+		// 需要登录的接口
+		authed := api.Group("")
+		authed.Use(middleware.Auth(app.authService))
+		{
+			authed.GET("/user.detail", kit.TranslateFunc(app.userRouter.Detail))
+		}
 	}
 }

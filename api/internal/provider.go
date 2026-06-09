@@ -24,8 +24,10 @@ var DaoProviderSet = wire.NewSet(
 
 var ServiceProviderSet = wire.NewSet(
 	service.NewUserService,
+	service.NewAuthService,
 )
 
 var RouterProviderSet = wire.NewSet(
 	router.NewUserRouter,
+	router.NewAuthRouter,
 )
