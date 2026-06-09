@@ -76,3 +76,16 @@ func (r *RoomRouter) Detail(ctx *gin.Context) (any, error) {
 	}
 	return snap, nil
 }
+
+// Settle 结算房间（仅房主）。
+func (r *RoomRouter) Settle(ctx *gin.Context) (any, error) {
+	userId := middleware.CurrentUserId(ctx)
+	var req roomIdRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil || req.RoomId == 0 {
+		return nil, kit.NewInvalidArgumentError()
+	}
+	if err := r.roomService.Settle(userId, req.RoomId); err != nil {
+		return nil, wrapErr(err)
+	}
+	return gin.H{"ok": true}, nil
+}

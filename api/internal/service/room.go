@@ -6,6 +6,7 @@ import (
 	"github.com/qxsugar/bill/api/internal/dao"
 	"github.com/qxsugar/bill/api/internal/model"
 	"github.com/qxsugar/pkg/kit"
+	"gorm.io/gorm"
 )
 
 // Broadcaster 由 websocket 层实现，房间状态变化时通知房间内所有连接。
@@ -22,6 +23,7 @@ func (noopBroadcaster) BroadcastRoomUpdated(int64) {}
 func (noopBroadcaster) BroadcastSettled(int64)     {}
 
 type RoomService struct {
+	db             *gorm.DB
 	roomDao        *dao.RoomDao
 	memberDao      *dao.RoomMemberDao
 	logDao         *dao.RoomLogDao
@@ -31,6 +33,7 @@ type RoomService struct {
 }
 
 func NewRoomService(
+	db *gorm.DB,
 	roomDao *dao.RoomDao,
 	memberDao *dao.RoomMemberDao,
 	logDao *dao.RoomLogDao,
@@ -38,6 +41,7 @@ func NewRoomService(
 	transactionDao *dao.TransactionDao,
 ) *RoomService {
 	return &RoomService{
+		db:             db,
 		roomDao:        roomDao,
 		memberDao:      memberDao,
 		logDao:         logDao,
@@ -152,6 +156,51 @@ func (s *RoomService) Leave(userId, roomId int64) error {
 		s.addLog(roomId, &userId, model.LogTypeLeave, fmt.Sprintf("%s 离开房间", u.Nickname))
 	}
 	s.broadcaster.BroadcastRoomUpdated(roomId)
+	return nil
+}
+
+// Settle 结算房间：仅房主可操作。
+// 标记房间已结算、记录结算时间，所有在场成员标记离开，写结算日志并广播 settled。
+// 结算后房间不可再操作，所有用户跳转到「结算-已结算」页。
+func (s *RoomService) Settle(userId, roomId int64) error {
+	room, err := s.roomDao.FindById(roomId)
+	if err != nil {
+		return err
+	}
+	if room == nil {
+		return kit.NewNotFoundError().WithInfo("房间不存在")
+	}
+	if room.OwnerId != userId {
+		return kit.NewPermissionDeniedError().WithInfo("只有房主可以点击结算")
+	}
+	if room.Status == model.RoomStatusSettled {
+		return kit.NewFailedPreconditionError().WithInfo("房间已结算")
+	}
+
+	now := nowTime()
+	err = s.db.Transaction(func(tx *gorm.DB) error {
+		settledAt := kit.TimeStamp{Time: now}
+		room.Status = model.RoomStatusSettled
+		room.SettledAt = &settledAt
+		if err := tx.Save(room).Error; err != nil {
+			return err
+		}
+		// 所有在场成员标记离开
+		if err := tx.Model(&model.RoomMember{}).
+			Where("room_id = ? and left_at is null", roomId).
+			Update("left_at", now).Error; err != nil {
+			return err
+		}
+		owner, _ := s.userDao.FindById(userId)
+		return tx.Create(&model.RoomLog{
+			RoomId: roomId, UserId: &userId, LogType: model.LogTypeSettle,
+			Content: fmt.Sprintf("%s 结算了房间", nameOf(owner)),
+		}).Error
+	})
+	if err != nil {
+		return err
+	}
+	s.broadcaster.BroadcastSettled(roomId)
 	return nil
 }
 

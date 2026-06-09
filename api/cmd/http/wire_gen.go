@@ -31,7 +31,7 @@ func InitializeApplication() (*Application, func(), error) {
 
 	userService := service.NewUserService(userDao)
 	authService := service.NewAuthService(userService)
-	roomService := service.NewRoomService(roomDao, memberDao, logDao, userDao, transactionDao)
+	roomService := service.NewRoomService(db, roomDao, memberDao, logDao, userDao, transactionDao)
 	transactionService := service.NewTransactionService(db, roomDao, memberDao, transactionDao, logDao, userDao)
 
 	userRouter := router.NewUserRouter(userService, log)
