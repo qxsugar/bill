@@ -3,22 +3,35 @@ Component({
     info: { type: Object, value: {} },
     size: { type: String, value: 'medium' },
   },
-  computed: {
-    initials() {
-      const name = this.data.info && this.data.info.nickname
-      return name ? name.charAt(0).toUpperCase() : '?'
-    },
+  data: {
+    initials: '?',
+    isEmoji: false,
+    isImage: false,
+    avatar: '',
   },
   lifetimes: {
     attached() {
-      const name = (this.data.info && this.data.info.nickname) || ''
-      this.setData({ initials: name.charAt(0).toUpperCase() || '?' })
+      this.refresh(this.data.info)
     },
   },
   observers: {
     info(val) {
-      const name = (val && val.nickname) || ''
-      this.setData({ initials: name.charAt(0).toUpperCase() || '?' })
+      this.refresh(val)
+    },
+  },
+  methods: {
+    // 头像可能是：图片 URL、emoji 文本，或为空时取昵称首字。
+    refresh(info) {
+      const avatar = (info && info.avatar) || ''
+      const name = (info && info.nickname) || ''
+      const isImage = /^https?:\/\//.test(avatar) || /^wxfile:\/\//.test(avatar) || avatar.startsWith('/')
+      const isEmoji = !!avatar && !isImage
+      this.setData({
+        isImage,
+        isEmoji,
+        avatar,
+        initials: name.charAt(0).toUpperCase() || '?',
+      })
     },
   },
 })

@@ -1,4 +1,5 @@
 <view class="avatar-wrap size-{{size}}">
-  <image wx:if="{{info.avatarUrl}}" class="avatar-img" src="{{info.avatarUrl}}" mode="aspectFill" />
+  <image wx:if="{{isImage}}" class="avatar-img" src="{{avatar}}" mode="aspectFill" />
+  <text wx:elif="{{isEmoji}}" class="avatar-emoji">{{avatar}}</text>
   <view wx:else class="avatar-placeholder">{{initials}}</view>
 </view>

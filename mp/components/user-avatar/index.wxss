@@ -3,4 +3,7 @@
 .size-medium, .avatar-wrap { width: 80rpx; height: 80rpx; }
 .size-large { width: 160rpx; height: 160rpx; }
 .avatar-img { width: 100%; height: 100%; }
+.avatar-emoji { font-size: 40rpx; line-height: 1; }
+.size-large .avatar-emoji { font-size: 88rpx; }
+.size-small .avatar-emoji { font-size: 32rpx; }
 .avatar-placeholder { color: #fff; font-size: var(--font-size-base); font-weight: bold; }
