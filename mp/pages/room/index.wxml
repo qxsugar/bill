@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="room-code">房间码：{{roomCode}}</view>
+  <view class="member-list">
+    <block wx:for="{{members}}" wx:key="id">
+      <user-avatar info="{{item}}" />
+    </block>
+  </view>
+  <view class="actions">
+    <button bindtap="goInvite">邀请好友</button>
+    <button bindtap="goLog">查看日志</button>
+    <button bindtap="goSettle">结算</button>
+  </view>
+</view>

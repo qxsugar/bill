@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="suits">
+    <block wx:for="{{suits}}" wx:key="name">
+      <view class="suit-row">
+        <text class="suit-name">{{item.name}}</text>
+        <view class="cards">
+          <block wx:for="{{item.cards}}" wx:key="*this" wx:for-item="card">
+            <view class="card {{item.played.indexOf(card) !== -1 ? 'played' : ''}}" bindtap="toggleCard" data-suit="{{item.name}}" data-card="{{card}}">{{card}}</view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+  <button bindtap="resetCards">重置</button>
+</view>

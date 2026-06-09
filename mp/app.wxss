@@ -1,0 +1,46 @@
+/* 全局 CSS 变量 */
+page {
+  --color-primary: #4A90E2;
+  --color-primary-dark: #357ABD;
+  --color-secondary: #7ED321;
+  --color-danger: #E74C3C;
+  --color-warning: #F39C12;
+
+  --color-bg: #F5F5F5;
+  --color-bg-white: #FFFFFF;
+  --color-bg-card: #FFFFFF;
+
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-placeholder: #AAAAAA;
+  --color-border: #E8E8E8;
+
+  --font-size-xs: 20rpx;
+  --font-size-sm: 24rpx;
+  --font-size-base: 28rpx;
+  --font-size-md: 32rpx;
+  --font-size-lg: 36rpx;
+  --font-size-xl: 40rpx;
+  --font-size-xxl: 48rpx;
+
+  --spacing-xs: 8rpx;
+  --spacing-sm: 16rpx;
+  --spacing-base: 24rpx;
+  --spacing-md: 32rpx;
+  --spacing-lg: 48rpx;
+  --spacing-xl: 64rpx;
+
+  --radius-sm: 8rpx;
+  --radius-base: 12rpx;
+  --radius-lg: 20rpx;
+  --radius-round: 9999rpx;
+
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}

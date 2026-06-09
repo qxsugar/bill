@@ -1,0 +1,9 @@
+<view class="container">
+  <view class="header">
+    <text class="title">打牌记账</text>
+  </view>
+  <view class="actions">
+    <button class="btn-primary" bindtap="createRoom">创建房间</button>
+    <button class="btn-secondary" bindtap="joinRoom">加入房间</button>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+.container { padding: var(--spacing-base); }
+.avatar-grid { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+.avatar-item { width: 160rpx; height: 160rpx; border-radius: 50%; border: 4rpx solid transparent; }
+.avatar-item.selected { border-color: var(--color-primary); }
+.btn-upload, .btn-confirm { margin-top: var(--spacing-base); width: 100%; }
+.btn-confirm { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); }

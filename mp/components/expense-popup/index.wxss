@@ -1,0 +1,6 @@
+.popup-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; z-index: 100; }
+.popup-content { background: var(--color-bg-white); border-radius: var(--radius-lg) var(--radius-lg) 0 0; width: 100%; padding: var(--spacing-base); }
+.popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-base); }
+.popup-title { font-size: var(--font-size-lg); font-weight: bold; }
+.input { display: block; width: 100%; border: 1rpx solid var(--color-border); border-radius: var(--radius-base); padding: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.btn-submit { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); margin-top: var(--spacing-base); }

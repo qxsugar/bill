@@ -1,0 +1,4 @@
+.container { padding: var(--spacing-base); }
+.log-list { height: 100vh; }
+.log-item { padding: var(--spacing-sm) 0; border-bottom: 1rpx solid var(--color-border); }
+.log-time { font-size: var(--font-size-xs); color: var(--color-text-placeholder); }

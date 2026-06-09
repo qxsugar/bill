@@ -1,0 +1,5 @@
+.container { padding: var(--spacing-base); }
+.suit-row { margin-bottom: var(--spacing-base); }
+.cards { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
+.card { width: 56rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; background: var(--color-bg-white); border-radius: var(--radius-sm); border: 1rpx solid var(--color-border); font-size: var(--font-size-sm); }
+.card.played { background: var(--color-border); color: var(--color-text-placeholder); text-decoration: line-through; }

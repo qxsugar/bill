@@ -1,0 +1,6 @@
+.container { padding: var(--spacing-base); }
+.header { padding: var(--spacing-xl) 0 var(--spacing-lg); text-align: center; }
+.title { font-size: var(--font-size-xxl); font-weight: bold; color: var(--color-primary); }
+.actions { display: flex; flex-direction: column; gap: var(--spacing-base); margin-top: var(--spacing-xl); }
+.btn-primary { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); font-size: var(--font-size-md); padding: var(--spacing-base); border: none; }
+.btn-secondary { background: var(--color-bg-white); color: var(--color-primary); border-radius: var(--radius-lg); font-size: var(--font-size-md); padding: var(--spacing-base); border: 2rpx solid var(--color-primary); }

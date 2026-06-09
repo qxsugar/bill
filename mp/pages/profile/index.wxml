@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="avatar-wrap" bindtap="changeAvatar">
+    <user-avatar info="{{userInfo}}" size="large" />
+    <text class="change-tip">点击更换头像</text>
+  </view>
+  <view class="form">
+    <view class="form-item">
+      <text class="label">昵称</text>
+      <input class="input" value="{{userInfo.nickname}}" bindinput="onNicknameInput" placeholder="请输入昵称" />
+    </view>
+  </view>
+  <button class="btn-save" bindtap="saveProfile">保存</button>
+</view>

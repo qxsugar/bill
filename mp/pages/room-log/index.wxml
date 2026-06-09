@@ -1,0 +1,10 @@
+<view class="container">
+  <scroll-view class="log-list" scroll-y>
+    <block wx:for="{{logs}}" wx:key="id">
+      <view class="log-item">
+        <text class="log-time">{{item.time}}</text>
+        <text class="log-content">{{item.content}}</text>
+      </view>
+    </block>
+  </scroll-view>
+</view>

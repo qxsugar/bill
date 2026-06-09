@@ -1,0 +1,13 @@
+<view class="popup-mask" wx:if="{{visible}}" bindtap="close">
+  <view class="popup-content" catchtap>
+    <view class="popup-header">
+      <text class="popup-title">记录支出</text>
+      <text class="popup-close" bindtap="close">✕</text>
+    </view>
+    <view class="form">
+      <input class="input" type="digit" placeholder="金额" bindinput="onAmountInput" value="{{amount}}" />
+      <input class="input" placeholder="备注（可选）" bindinput="onRemarkInput" value="{{remark}}" />
+    </view>
+    <button class="btn-submit" bindtap="submit">确认</button>
+  </view>
+</view>

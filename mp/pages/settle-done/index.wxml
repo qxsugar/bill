@@ -1,0 +1,5 @@
+<view class="container">
+  <view class="success-icon">✓</view>
+  <text class="success-text">结算完成</text>
+  <button bindtap="backHome">返回首页</button>
+</view>

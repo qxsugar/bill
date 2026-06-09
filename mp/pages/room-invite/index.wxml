@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="code-block">
+    <text class="label">房间码</text>
+    <text class="code">{{roomCode}}</text>
+  </view>
+  <view class="qr-block">
+    <image class="qr-img" src="{{qrUrl}}" mode="aspectFit" />
+  </view>
+  <button bindtap="copyCode">复制房间码</button>
+</view>

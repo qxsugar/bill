@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="settle-list">
+    <block wx:for="{{items}}" wx:key="id">
+      <view class="settle-item">
+        <user-avatar info="{{item.user}}" />
+        <text class="amount {{item.amount >= 0 ? 'earn' : 'lose'}}">{{item.amount >= 0 ? '+' : ''}}{{item.amount}}</text>
+      </view>
+    </block>
+  </view>
+  <button class="btn-confirm" bindtap="confirmSettle">确认结算</button>
+</view>
