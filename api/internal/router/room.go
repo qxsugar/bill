@@ -89,3 +89,18 @@ func (r *RoomRouter) Settle(ctx *gin.Context) (any, error) {
 	}
 	return gin.H{"ok": true}, nil
 }
+
+// Logs 分页返回房间日志（从旧到新）。
+func (r *RoomRouter) Logs(ctx *gin.Context) (any, error) {
+	roomId, err := strconv.ParseInt(ctx.Query("room_id"), 10, 64)
+	if err != nil || roomId == 0 {
+		return nil, kit.NewInvalidArgumentError()
+	}
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "50"))
+	offset, _ := strconv.Atoi(ctx.DefaultQuery("offset", "0"))
+	list, total, err := r.roomService.Logs(roomId, limit, offset)
+	if err != nil {
+		return nil, wrapErr(err)
+	}
+	return kit.PageBody{Offset: offset, Limit: limit, Total: total, List: list}, nil
+}

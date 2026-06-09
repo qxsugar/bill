@@ -204,6 +204,26 @@ func (s *RoomService) Settle(userId, roomId int64) error {
 	return nil
 }
 
+// Logs 分页返回房间日志。日志 DAO 按 id 倒序取出，
+// 设计要求房间日志页从旧到新展示，故在此反转为正序。
+func (s *RoomService) Logs(roomId int64, limit, offset int) ([]*model.RoomLog, int64, error) {
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	list, total, err := s.logDao.ListByRoomId(roomId, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	// 反转为从旧到新
+	for i, j := 0, len(list)-1; i < j; i, j = i+1, j-1 {
+		list[i], list[j] = list[j], list[i]
+	}
+	return list, total, nil
+}
+
 // genUniqueCode 按设计规则生成唯一房间码：4 位（优先两两连号）→ 5 位兜底。
 func (s *RoomService) genUniqueCode() (string, error) {
 	exists := func(code string) bool {

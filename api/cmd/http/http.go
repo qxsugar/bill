@@ -119,6 +119,7 @@ func (app *Application) registerApi() {
 			authed.POST("/room.leave", kit.TranslateFunc(app.roomRouter.Leave))
 			authed.GET("/room.detail", kit.TranslateFunc(app.roomRouter.Detail))
 			authed.POST("/room.settle", kit.TranslateFunc(app.roomRouter.Settle))
+			authed.GET("/room.logs", kit.TranslateFunc(app.roomRouter.Logs))
 
 			authed.POST("/transaction.expense", kit.TranslateFunc(app.txRouter.Expense))
 			authed.POST("/transaction.revoke", kit.TranslateFunc(app.txRouter.Revoke))
