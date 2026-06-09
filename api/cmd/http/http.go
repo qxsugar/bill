@@ -15,6 +15,7 @@ import (
 	"github.com/qxsugar/bill/api/internal/middleware"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
+	"github.com/qxsugar/bill/api/internal/ws"
 	"github.com/qxsugar/pkg/kit"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -31,6 +32,7 @@ type Application struct {
 	roomRouter  *router.RoomRouter
 	txRouter    *router.TransactionRouter
 	cardRouter  *router.CardTrackerRouter
+	hub         *ws.Hub
 }
 
 func NewApplication(
@@ -42,6 +44,7 @@ func NewApplication(
 	roomRouter *router.RoomRouter,
 	txRouter *router.TransactionRouter,
 	cardRouter *router.CardTrackerRouter,
+	hub *ws.Hub,
 ) *Application {
 	return &Application{
 		g:           gin.New(),
@@ -53,6 +56,7 @@ func NewApplication(
 		roomRouter:  roomRouter,
 		txRouter:    txRouter,
 		cardRouter:  cardRouter,
+		hub:         hub,
 	}
 }
 
@@ -103,6 +107,9 @@ func (app *Application) registerApi() {
 		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 	app.g.GET("/ping", kit.TranslateFunc(func(ctx *gin.Context) (any, error) { return "pong", nil }))
+
+	// WebSocket：房间实时事件（鉴权用 query token，自行升级连接）
+	app.g.GET("/ws/room", ws.Handler(app.hub, app.authService))
 
 	api := app.g.Group("/api/v1")
 	{

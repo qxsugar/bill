@@ -18,7 +18,8 @@
       "Bash(git commit -q -m 'feat\\(api\\): 支出/撤销/感谢 *)",
       "Bash(git commit -q -m 'feat\\(api\\): 房间结算 *)",
       "Bash(git commit -q -m 'feat\\(api\\): 房间日志分页（从旧到新） *)",
-      "Bash(git commit -q -m 'feat\\(api\\): 扑克记牌器（后端存储状态） *)"
+      "Bash(git commit -q -m 'feat\\(api\\): 扑克记牌器（后端存储状态） *)",
+      "Bash(git commit -q -m 'feat\\(api\\): WebSocket 房间实时广播 *)"
     ]
   }
 }

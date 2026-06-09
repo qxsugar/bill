@@ -7,11 +7,13 @@ import (
 	"github.com/qxsugar/bill/api/internal/logger"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
+	"github.com/qxsugar/bill/api/internal/ws"
 )
 
 var MiscProviderSet = wire.NewSet(
 	logger.NewLogger,
 	database.NewDatabase,
+	ws.NewHub,
 )
 
 var DaoProviderSet = wire.NewSet(

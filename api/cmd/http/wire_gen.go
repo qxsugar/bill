@@ -10,6 +10,7 @@ import (
 	"github.com/qxsugar/bill/api/internal/logger"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
+	"github.com/qxsugar/bill/api/internal/ws"
 )
 
 func InitializeApplication() (*Application, func(), error) {
@@ -36,13 +37,18 @@ func InitializeApplication() (*Application, func(), error) {
 	transactionService := service.NewTransactionService(db, roomDao, memberDao, transactionDao, logDao, userDao)
 	cardTrackerService := service.NewCardTrackerService(cardTrackerDao)
 
+	// WebSocket Hub 作为广播器注入房间/交易服务
+	hub := ws.NewHub(log)
+	roomService.SetBroadcaster(hub)
+	transactionService.SetBroadcaster(hub)
+
 	userRouter := router.NewUserRouter(userService, log)
 	authRouter := router.NewAuthRouter(authService, log)
 	roomRouter := router.NewRoomRouter(roomService, log)
 	transactionRouter := router.NewTransactionRouter(transactionService, log)
 	cardTrackerRouter := router.NewCardTrackerRouter(cardTrackerService, log)
 
-	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter, transactionRouter, cardTrackerRouter)
+	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter, transactionRouter, cardTrackerRouter, hub)
 	cleanup := func() {
 		dbCleanup()
 		loggerCleanup()
