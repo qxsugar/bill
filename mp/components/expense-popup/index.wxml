@@ -1,13 +1,38 @@
 <view class="popup-mask" wx:if="{{visible}}" bindtap="close">
   <view class="popup-content" catchtap>
     <view class="popup-header">
-      <text class="popup-title">记录支出</text>
-      <text class="popup-close" bindtap="close">✕</text>
+      <text class="popup-close" bindtap="close">取消</text>
+      <text class="popup-title">
+        {{mode === 'single' ? '向 ' + (targets[0].nickname || '') + ' 支出' : '支出'}}
+      </text>
+      <text class="popup-confirm" bindtap="submit">确认</text>
     </view>
+
+    <!-- 批量模式：均分 / 统一 切换 -->
+    <view wx:if="{{mode === 'batch'}}" class="batch-modes">
+      <view class="mode-tab {{batchMode === 'equal' ? 'active' : ''}}" data-mode="equal" bindtap="switchBatchMode">均分金额</view>
+      <view class="mode-tab {{batchMode === 'same' ? 'active' : ''}}" data-mode="same" bindtap="switchBatchMode">统一金额</view>
+    </view>
+
+    <!-- 批量模式：展示参与的对象 -->
+    <view wx:if="{{mode === 'batch'}}" class="targets">
+      <block wx:for="{{targets}}" wx:key="user_id">
+        <view class="target-item">
+          <user-avatar info="{{item}}" size="small" />
+          <text class="target-name">{{item.nickname}}</text>
+        </view>
+      </block>
+    </view>
+
     <view class="form">
-      <input class="input" type="digit" placeholder="金额" bindinput="onAmountInput" value="{{amount}}" />
-      <input class="input" placeholder="备注（可选）" bindinput="onRemarkInput" value="{{remark}}" />
+      <input
+        class="amount-input"
+        type="digit"
+        focus="{{visible}}"
+        placeholder="{{mode === 'batch' && batchMode === 'equal' ? '输入总金额' : '输入金额'}}"
+        bindinput="onAmountInput"
+        value="{{amount}}"
+      />
     </view>
-    <button class="btn-submit" bindtap="submit">确认</button>
   </view>
 </view>

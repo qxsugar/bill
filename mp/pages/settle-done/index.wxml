@@ -1,5 +1,18 @@
 <view class="container">
   <view class="success-icon">✓</view>
   <text class="success-text">结算完成</text>
-  <button bindtap="backHome">返回首页</button>
+
+  <view class="members-list">
+    <block wx:for="{{members}}" wx:key="id">
+      <view class="member-item">
+        <text class="nickname">{{item.nickname}}</text>
+        <text class="balance {{item.balance >= 0 ? 'earn' : 'lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="btns">
+    <button class="btn-outline" bindtap="goLog">查看日志</button>
+    <button class="btn-primary" bindtap="backHome">返回首页</button>
+  </view>
 </view>

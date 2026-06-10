@@ -1,10 +1,9 @@
 <view class="container">
   <view class="code-block">
     <text class="label">房间码</text>
-    <text class="code">{{roomCode}}</text>
+    <text class="code">{{code}}</text>
   </view>
-  <view class="qr-block">
-    <image class="qr-img" src="{{qrUrl}}" mode="aspectFit" />
-  </view>
-  <button bindtap="copyCode">复制房间码</button>
+  <text class="tips">将房间码分享给好友，邀请他们加入</text>
+  <button class="btn-copy" bindtap="copyCode">复制房间码</button>
+  <button class="btn-share" open-type="share">分享给朋友</button>
 </view>

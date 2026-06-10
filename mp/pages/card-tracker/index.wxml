@@ -1,15 +1,27 @@
 <view class="container">
-  <view class="suits">
-    <block wx:for="{{suits}}" wx:key="name">
-      <view class="suit-row">
-        <text class="suit-name">{{item.name}}</text>
-        <view class="cards">
-          <block wx:for="{{item.cards}}" wx:key="*this" wx:for-item="card">
-            <view class="card {{item.played.indexOf(card) !== -1 ? 'played' : ''}}" bindtap="toggleCard" data-suit="{{item.name}}" data-card="{{card}}">{{card}}</view>
-          </block>
-        </view>
+  <view class="header">
+    <text class="remaining">剩余 {{remaining}} 张</text>
+    <view class="header-btns">
+      <view class="icon-btn" bindtap="showSetting">设置</view>
+      <view class="icon-btn danger" bindtap="resetCards">重置</view>
+    </view>
+  </view>
+
+  <view class="card-grid">
+    <block wx:for="{{cards}}" wx:key="rank">
+      <view class="card-cell {{item.count === 0 ? 'exhausted' : ''}}" bindtap="onCardTap" data-rank="{{item.rank}}">
+        <text class="card-display">{{item.display}}</text>
+        <text class="card-count">{{item.count}}/{{item.max}}</text>
       </view>
     </block>
   </view>
-  <button bindtap="resetCards">重置</button>
+
+  <text class="hint">单击 -1，快速双击 +1</text>
+
+  <view class="mask {{settingVisible ? 'show' : ''}}" catchtap="closeSetting" />
+  <view class="setting-sheet {{settingVisible ? 'show' : ''}}">
+    <text class="sheet-title">设置牌副数</text>
+    <input class="deck-input" type="number" value="{{deckInput}}" bindinput="onDeckInput" placeholder="1-10" />
+    <button class="btn-ok" bindtap="confirmSetting">确定</button>
+  </view>
 </view>

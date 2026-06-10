@@ -1,9 +1,10 @@
 <view class="container">
   <view class="avatar-grid">
     <block wx:for="{{avatars}}" wx:key="*this">
-      <image class="avatar-item {{selected === item ? 'selected' : ''}}" src="{{item}}" bindtap="selectAvatar" data-url="{{item}}" mode="aspectFill" />
+      <view class="avatar-item {{selected === item ? 'selected' : ''}}" bindtap="selectAvatar" data-emoji="{{item}}">
+        <text class="emoji">{{item}}</text>
+      </view>
     </block>
   </view>
-  <button class="btn-upload" bindtap="uploadCustom">上传自定义头像</button>
   <button class="btn-confirm" bindtap="confirm">确定</button>
 </view>

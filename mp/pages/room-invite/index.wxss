@@ -1,4 +1,7 @@
-.container { padding: var(--spacing-base); }
-.code-block { text-align: center; margin: var(--spacing-lg) 0; }
-.code { font-size: var(--font-size-xxl); font-weight: bold; color: var(--color-primary); letter-spacing: 8rpx; }
-.qr-img { width: 400rpx; height: 400rpx; }
+.container { padding: var(--spacing-base); display: flex; flex-direction: column; align-items: center; }
+.code-block { text-align: center; margin: var(--spacing-xl) 0 var(--spacing-lg); }
+.label { display: block; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--spacing-sm); }
+.code { font-size: 96rpx; font-weight: bold; color: var(--color-primary); letter-spacing: 16rpx; }
+.tips { font-size: var(--font-size-sm); color: var(--color-text-placeholder); margin-bottom: var(--spacing-lg); }
+.btn-copy { width: 100%; margin-bottom: var(--spacing-sm); border: 2rpx solid var(--color-primary); color: var(--color-primary); background: transparent; border-radius: var(--radius-lg); }
+.btn-share { width: 100%; background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); }

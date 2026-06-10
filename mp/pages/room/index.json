@@ -1,1 +1,7 @@
-{"navigationBarTitleText": "房间"}
+{
+  "navigationBarTitleText": "打牌记账",
+  "usingComponents": {
+    "user-avatar": "../../components/user-avatar/index",
+    "expense-popup": "../../components/expense-popup/index"
+  }
+}

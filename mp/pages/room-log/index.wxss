@@ -1,4 +1,6 @@
-.container { padding: var(--spacing-base); }
-.log-list { height: 100vh; }
-.log-item { padding: var(--spacing-sm) 0; border-bottom: 1rpx solid var(--color-border); }
-.log-time { font-size: var(--font-size-xs); color: var(--color-text-placeholder); }
+.container { padding: var(--spacing-base); height: 100vh; box-sizing: border-box; }
+.log-list { height: 100%; }
+.log-item { padding: var(--spacing-sm) 0; border-bottom: 1rpx solid var(--color-border); display: flex; gap: var(--spacing-sm); align-items: baseline; }
+.log-time { font-size: var(--font-size-xs); color: var(--color-text-placeholder); flex-shrink: 0; }
+.log-content { font-size: var(--font-size-sm); color: var(--color-text-primary); }
+.empty { text-align: center; color: var(--color-text-placeholder); padding: var(--spacing-xl) 0; font-size: var(--font-size-sm); }

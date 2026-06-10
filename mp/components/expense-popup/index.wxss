@@ -1,6 +1,16 @@
 .popup-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; z-index: 100; }
-.popup-content { background: var(--color-bg-white); border-radius: var(--radius-lg) var(--radius-lg) 0 0; width: 100%; padding: var(--spacing-base); }
+.popup-content { background: var(--color-bg-white); border-radius: var(--radius-lg) var(--radius-lg) 0 0; width: 100%; padding: var(--spacing-base) var(--spacing-base) var(--spacing-xl); }
 .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-base); }
-.popup-title { font-size: var(--font-size-lg); font-weight: bold; }
-.input { display: block; width: 100%; border: 1rpx solid var(--color-border); border-radius: var(--radius-base); padding: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
-.btn-submit { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); margin-top: var(--spacing-base); }
+.popup-title { font-size: var(--font-size-md); font-weight: bold; }
+.popup-close { font-size: var(--font-size-base); color: var(--color-text-secondary); }
+.popup-confirm { font-size: var(--font-size-base); color: var(--color-primary); font-weight: bold; }
+
+.batch-modes { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-base); }
+.mode-tab { flex: 1; text-align: center; padding: var(--spacing-sm); border-radius: var(--radius-base); background: var(--color-bg); color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.mode-tab.active { background: var(--color-primary); color: #fff; }
+
+.targets { display: flex; flex-wrap: wrap; gap: var(--spacing-base); margin-bottom: var(--spacing-base); }
+.target-item { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); }
+.target-name { font-size: var(--font-size-xs); color: var(--color-text-secondary); max-width: 100rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.amount-input { display: block; width: 100%; border: 1rpx solid var(--color-border); border-radius: var(--radius-base); padding: var(--spacing-base); font-size: var(--font-size-xl); text-align: center; }

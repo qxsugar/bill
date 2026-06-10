@@ -1,5 +1,19 @@
-.container { padding: var(--spacing-base); }
-.suit-row { margin-bottom: var(--spacing-base); }
-.cards { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
-.card { width: 56rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; background: var(--color-bg-white); border-radius: var(--radius-sm); border: 1rpx solid var(--color-border); font-size: var(--font-size-sm); }
-.card.played { background: var(--color-border); color: var(--color-text-placeholder); text-decoration: line-through; }
+.container { display: flex; flex-direction: column; min-height: 100vh; padding: var(--spacing-base); box-sizing: border-box; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-base); }
+.remaining { font-size: var(--font-size-lg); font-weight: bold; }
+.header-btns { display: flex; gap: var(--spacing-sm); }
+.icon-btn { padding: 8rpx var(--spacing-sm); background: var(--color-bg-white); border-radius: var(--radius-base); font-size: var(--font-size-sm); }
+.icon-btn.danger { color: var(--color-danger); }
+.card-grid { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.card-cell { width: calc(20% - 10rpx); display: flex; flex-direction: column; align-items: center; background: var(--color-bg-white); border-radius: var(--radius-base); padding: var(--spacing-sm) 0; }
+.card-cell.exhausted { opacity: 0.35; }
+.card-display { font-size: var(--font-size-lg); font-weight: bold; }
+.card-count { font-size: 22rpx; color: var(--color-text-placeholder); margin-top: 4rpx; }
+.hint { text-align: center; font-size: var(--font-size-xs); color: var(--color-text-placeholder); margin-top: var(--spacing-base); }
+.mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
+.mask.show { opacity: 1; pointer-events: auto; }
+.setting-sheet { position: fixed; bottom: -400rpx; left: 0; right: 0; background: #fff; border-radius: 24rpx 24rpx 0 0; padding: var(--spacing-lg); transition: bottom 0.3s; z-index: 11; }
+.setting-sheet.show { bottom: 0; }
+.sheet-title { display: block; font-size: var(--font-size-lg); font-weight: bold; margin-bottom: var(--spacing-base); text-align: center; }
+.deck-input { border: 2rpx solid var(--color-border); border-radius: var(--radius-base); padding: var(--spacing-sm); text-align: center; font-size: var(--font-size-lg); width: 100%; margin-bottom: var(--spacing-base); box-sizing: border-box; }
+.btn-ok { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); }
