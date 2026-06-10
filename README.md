@@ -4,24 +4,26 @@
 
 ## 功能模块
 
-| 模块 | 说明 |
-|------|------|
-| 登录 | 微信 code2session + JWT |
-| 房间 | 创建/加入/离开/结算，房主码 4 位优先含连号 |
-| 支出 | 单人/均分/统一三种模式，可撤销，可感谢 |
-| 实时 | WebSocket 广播房间事件（成员变动、支出、结算） |
-| 记牌器 | 按牌型统计剩余张数，支持多副牌，单击扣减/双击归还 |
-| 日志 | 房间操作流水，分页加载 |
-| 个人 | 昵称 + emoji 头像选择 |
+| 模块  | 说明                           |
+|-----|------------------------------|
+| 登录  | 微信 code2session + JWT        |
+| 房间  | 创建/加入/离开/结算，房主码 4 位优先含连号     |
+| 支出  | 单人/均分/统一三种模式，可撤销，可感谢         |
+| 实时  | WebSocket 广播房间事件（成员变动、支出、结算） |
+| 记牌器 | 按牌型统计剩余张数，支持多副牌，单击扣减/双击归还    |
+| 日志  | 房间操作流水，分页加载                  |
+| 个人  | 昵称 + emoji 头像选择              |
 
 ## 技术栈
 
 **后端** (`/api`)
+
 - Go 1.24 · Gin · GORM + MySQL · zap · Wire DI
 - JWT HS256 · gorilla/websocket
 - `github.com/qxsugar/pkg/kit` 统一响应格式
 
 **前端** (`/mp`)
+
 - 微信小程序原生（WXML / WXSS / JS）
 - 无第三方 UI 库，CSS 变量统一设计 token
 
@@ -109,7 +111,20 @@ GET  /ws/room?room_id=&token=    # WebSocket 连接
 
 服务端推送 JSON：
 
-```json
-{ "event": "room_updated", "data": { ...RoomSnapshot } }
-{ "event": "settled",      "data": { ...RoomSnapshot } }
+```json5
+{
+  "event": "room_updated",
+  "data": {
+    //...RoomSnapshot
+  }
+}   
+```
+
+```json5
+{
+  "event": "settled",
+  "data": {
+    //...RoomSnapshot
+  }
+}
 ```

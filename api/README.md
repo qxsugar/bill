@@ -36,12 +36,12 @@ api/
 
 通过环境变量覆盖（前缀 `BILL_`，`.` 替换为 `_`）：
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `BILL_DEFAULT_DATABASE` | `bill:***@tcp(ppapi.cn:3306)/bill?...` | MySQL DSN |
-| `BILL_SERVER_HOST` | `0.0.0.0` | 监听地址 |
-| `BILL_SERVER_PORT` | `8080` | 监听端口 |
-| `BILL_LOG_ENCODING` | `json` | `json` / `console` |
+| 变量                      | 默认值                                    | 说明                 |
+|-------------------------|----------------------------------------|--------------------|
+| `BILL_DEFAULT_DATABASE` | `bill:***@tcp(ppapi.cn:3306)/bill?...` | MySQL DSN          |
+| `BILL_SERVER_HOST`      | `0.0.0.0`                              | 监听地址               |
+| `BILL_SERVER_PORT`      | `8080`                                 | 监听端口               |
+| `BILL_LOG_ENCODING`     | `json`                                 | `json` / `console` |
 
 ## 运行
 
