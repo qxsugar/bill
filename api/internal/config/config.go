@@ -31,5 +31,5 @@ func Setup() {
 
 	// 数据库连接串：BILL_DEFAULT_DATABASE
 	// 例：bill:2ZhwKarp@tcp(ppapi.cn:3306)/bill?charset=utf8mb4&parseTime=True&loc=Local
-	viper.SetDefault("default.database", "bill:2ZhwKarp@tcp(ppapi.cn:3306)/bill?charset=utf8mb4&parseTime=True&loc=Local")
+	viper.SetDefault("default.database", "root:3aVhodFz@tcp(ppapi.cn:3306)/bill?charset=utf8mb4&parseTime=True&loc=Local")
 }
