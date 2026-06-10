@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bill
+  namespace: magic
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    - host: bill.ppapi.cn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bill
+                port:
+                  number: 8080
+  tls:
+    - secretName: bill.ppapi.cn
+      hosts:
+        - bill.ppapi.cn

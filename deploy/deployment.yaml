@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bill
+  namespace: magic
+  labels:
+    name: bill
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bill
+  template:
+    metadata:
+      labels:
+        app: bill
+    spec:
+      imagePullSecrets:
+        - name: ccr
+      containers:
+        - name: app
+          image: ccr.ccs.tencentyun.com/wwww/bill:latest
+          imagePullPolicy: Always
+          env:
+            - name: BILL_WECHAT_APPID
+              value: "wx7bdedd7aa587c5a0"
+            - name: BILL_WECHAT_SECRET
+              value: "4abc8cbc349f42bd9e669a1218e9a223"
+          command:
+            - ./app
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 512Mi
