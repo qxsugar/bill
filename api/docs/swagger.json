@@ -1,0 +1,1475 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "记账小程序后端 API 文档",
+        "title": "Bill API",
+        "contact": {
+            "name": "Developer",
+            "url": "https://github.com/qxsugar",
+            "email": "qxsugar@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/v1/auth.login": {
+            "post": {
+                "description": "用微信 code 换取登录态，返回 JWT 与用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "微信登录",
+                "parameters": [
+                    {
+                        "description": "登录请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.loginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/router.loginResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/card.adjust": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "调整某牌面剩余数量：delta=-1 点击扣除，delta=+1 双击增加",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "card"
+                ],
+                "summary": "调整牌面数量",
+                "parameters": [
+                    {
+                        "description": "调整请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.adjustRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.CardTracker"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/card.detail": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "返回当前用户记牌器状态（不存在则初始化）",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "card"
+                ],
+                "summary": "记牌器状态",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.CardTracker"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/card.reset": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "按当前牌副数重置",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "card"
+                ],
+                "summary": "重置记牌器",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.CardTracker"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/card.setDeck": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "设置牌副数并重置（设置页确认）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "card"
+                ],
+                "summary": "设置牌副数",
+                "parameters": [
+                    {
+                        "description": "牌副数请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.deckRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.CardTracker"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "创建房间，当前用户成为房主",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "创建房间",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.Room"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.detail": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "返回房间快照（房间 + 成员 + 消息），供进入房间与 ws 推送后拉取",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "房间快照",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "房间 ID",
+                        "name": "room_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/service.RoomSnapshot"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "404": {
+                        "description": "房间不存在",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.join": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "通过房间码加入房间",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "加入房间",
+                "parameters": [
+                    {
+                        "description": "加入房间请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.joinRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.Room"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.leave": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "离开房间",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "离开房间",
+                "parameters": [
+                    {
+                        "description": "房间 ID 请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.roomIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ok": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.logs": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "分页返回房间日志（从旧到新）",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "房间日志",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "房间 ID",
+                        "name": "room_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 50,
+                        "description": "分页大小",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "分页偏移",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/PageBody"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "list": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/definitions/model.RoomLog"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/room.settle": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "结算房间（仅房主）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "room"
+                ],
+                "summary": "结算房间",
+                "parameters": [
+                    {
+                        "description": "房间 ID 请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.roomIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ok": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transaction.expense": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "记录支出。前端三种模式（单笔/均分/统一）均归一为 items 明细列表提交",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "记录支出",
+                "parameters": [
+                    {
+                        "description": "支出请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.expenseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ok": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transaction.revoke": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "撤销自己发出的交易",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "撤销交易",
+                "parameters": [
+                    {
+                        "description": "交易 ID 请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.txIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ok": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transaction.thank": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "对收到的交易发送感谢",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "感谢交易",
+                "parameters": [
+                    {
+                        "description": "交易 ID 请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.txIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ok": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user.detail": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "返回当前登录用户的信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "当前用户信息",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "404": {
+                        "description": "用户不存在",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user.presetAvatars": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "返回可选的预设头像列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "预设头像列表",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "avatars": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user.update": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "修改当前用户昵称/头像，昵称与头像至少传一个",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "修改用户资料",
+                "parameters": [
+                    {
+                        "description": "资料更新请求",
+                        "name": "reqBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/router.updateProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/RespBody"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "resp_data": {
+                                            "$ref": "#/definitions/model.User"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "401": {
+                        "description": "未登录",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "404": {
+                        "description": "用户不存在",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/RespBody"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "PageBody": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "description": "Limit on the number of items",
+                    "type": "integer"
+                },
+                "list": {
+                    "description": "Data list"
+                },
+                "offset": {
+                    "description": "Offset",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "Total number of items",
+                    "type": "integer"
+                }
+            }
+        },
+        "RespBody": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Business status code",
+                    "type": "integer"
+                },
+                "desc": {
+                    "description": "Exception hints, typically only appear in development mode",
+                    "type": "string"
+                },
+                "info": {
+                    "description": "Business hints",
+                    "type": "string"
+                },
+                "resp_data": {
+                    "description": "Returned data"
+                },
+                "succeeded": {
+                    "description": "Whether the operation was successful",
+                    "type": "boolean"
+                }
+            }
+        },
+        "kit.TimeStamp": {
+            "type": "object",
+            "properties": {
+                "time.Time": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CardCounts": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "integer"
+            }
+        },
+        "model.CardTracker": {
+            "type": "object",
+            "properties": {
+                "counts": {
+                    "$ref": "#/definitions/model.CardCounts"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "deck_count": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Room": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "owner_id": {
+                    "type": "integer"
+                },
+                "settled_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.RoomLog": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "log_type": {
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "openid": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "$ref": "#/definitions/kit.TimeStamp"
+                }
+            }
+        },
+        "router.adjustRequest": {
+            "type": "object",
+            "properties": {
+                "delta": {
+                    "type": "integer"
+                },
+                "rank": {
+                    "type": "string"
+                }
+            }
+        },
+        "router.deckRequest": {
+            "type": "object",
+            "properties": {
+                "deck_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "router.expenseItemDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "to_user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "router.expenseRequest": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/router.expenseItemDTO"
+                    }
+                },
+                "room_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "router.joinRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "router.loginRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "router.loginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
+        "router.roomIdRequest": {
+            "type": "object",
+            "properties": {
+                "room_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "router.txIdRequest": {
+            "type": "object",
+            "properties": {
+                "tx_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "router.updateProfileRequest": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.MemberView": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "balance": {
+                    "type": "number"
+                },
+                "is_owner": {
+                    "type": "boolean"
+                },
+                "left": {
+                    "type": "boolean"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.MessageView": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "from_name": {
+                    "type": "string"
+                },
+                "from_user_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "thanked": {
+                    "type": "boolean"
+                },
+                "to_name": {
+                    "type": "string"
+                },
+                "to_user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "service.RoomSnapshot": {
+            "type": "object",
+            "properties": {
+                "members": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.MemberView"
+                    }
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/service.MessageView"
+                    }
+                },
+                "room": {
+                    "$ref": "#/definitions/model.Room"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "需登录接口：在请求头携带 \"Bearer {token}\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

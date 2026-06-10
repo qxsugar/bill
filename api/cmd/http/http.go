@@ -12,12 +12,15 @@ import (
 
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
+	_ "github.com/qxsugar/bill/api/docs"
 	"github.com/qxsugar/bill/api/internal/middleware"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
 	"github.com/qxsugar/bill/api/internal/ws"
 	"github.com/qxsugar/pkg/kit"
 	"github.com/spf13/viper"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -74,6 +77,7 @@ func (app *Application) Start() {
 	}()
 
 	app.registerInfra()
+	app.registerSwagger()
 	app.registerApi()
 
 	quit := make(chan os.Signal, 1)
@@ -94,6 +98,10 @@ func (app *Application) registerInfra() {
 	app.g.Use(requestid.New())
 	app.g.Use(middleware.Cors())
 	app.g.Use(middleware.AccessLogger(), gin.Recovery(), middleware.Recovery())
+}
+
+func (app *Application) registerSwagger() {
+	app.g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 func (app *Application) registerApi() {

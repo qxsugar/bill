@@ -27,6 +27,17 @@ type loginResponse struct {
 }
 
 // Login 用微信 code 换取登录态，返回 JWT 与用户信息。
+//
+//	@router			/api/v1/auth.login [post]
+//	@summary		微信登录
+//	@description	用微信 code 换取登录态，返回 JWT 与用户信息
+//	@tags			auth
+//	@accept			application/json
+//	@produce		application/json
+//	@param			reqBody	body		loginRequest							true	"登录请求"
+//	@success		200		{object}	kit.RespBody{resp_data=loginResponse}	"登录成功"
+//	@failure		400		{object}	kit.RespBody							"请求参数错误"
+//	@failure		500		{object}	kit.RespBody							"服务器内部错误"
 func (r *AuthRouter) Login(ctx *gin.Context) (any, error) {
 	var req loginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil || req.Code == "" {

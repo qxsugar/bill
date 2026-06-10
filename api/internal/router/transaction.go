@@ -28,6 +28,19 @@ type expenseRequest struct {
 }
 
 // Expense 记录支出。前端三种模式（单笔/均分/统一）均归一为 items 明细列表提交。
+//
+//	@router			/api/v1/transaction.expense [post]
+//	@summary		记录支出
+//	@description	记录支出。前端三种模式（单笔/均分/统一）均归一为 items 明细列表提交
+//	@tags			transaction
+//	@accept			application/json
+//	@produce		application/json
+//	@security		BearerAuth
+//	@param			reqBody	body		expenseRequest							true	"支出请求"
+//	@success		200		{object}	kit.RespBody{resp_data=object{ok=bool}}	"成功"
+//	@failure		400		{object}	kit.RespBody							"请求参数错误"
+//	@failure		401		{object}	kit.RespBody							"未登录"
+//	@failure		500		{object}	kit.RespBody							"服务器内部错误"
 func (r *TransactionRouter) Expense(ctx *gin.Context) (any, error) {
 	userId := middleware.CurrentUserId(ctx)
 	var req expenseRequest
@@ -49,6 +62,19 @@ type txIdRequest struct {
 }
 
 // Revoke 撤销自己发出的交易。
+//
+//	@router			/api/v1/transaction.revoke [post]
+//	@summary		撤销交易
+//	@description	撤销自己发出的交易
+//	@tags			transaction
+//	@accept			application/json
+//	@produce		application/json
+//	@security		BearerAuth
+//	@param			reqBody	body		txIdRequest								true	"交易 ID 请求"
+//	@success		200		{object}	kit.RespBody{resp_data=object{ok=bool}}	"成功"
+//	@failure		400		{object}	kit.RespBody							"请求参数错误"
+//	@failure		401		{object}	kit.RespBody							"未登录"
+//	@failure		500		{object}	kit.RespBody							"服务器内部错误"
 func (r *TransactionRouter) Revoke(ctx *gin.Context) (any, error) {
 	userId := middleware.CurrentUserId(ctx)
 	var req txIdRequest
@@ -62,6 +88,19 @@ func (r *TransactionRouter) Revoke(ctx *gin.Context) (any, error) {
 }
 
 // Thank 对收到的交易发送感谢。
+//
+//	@router			/api/v1/transaction.thank [post]
+//	@summary		感谢交易
+//	@description	对收到的交易发送感谢
+//	@tags			transaction
+//	@accept			application/json
+//	@produce		application/json
+//	@security		BearerAuth
+//	@param			reqBody	body		txIdRequest								true	"交易 ID 请求"
+//	@success		200		{object}	kit.RespBody{resp_data=object{ok=bool}}	"成功"
+//	@failure		400		{object}	kit.RespBody							"请求参数错误"
+//	@failure		401		{object}	kit.RespBody							"未登录"
+//	@failure		500		{object}	kit.RespBody							"服务器内部错误"
 func (r *TransactionRouter) Thank(ctx *gin.Context) (any, error) {
 	userId := middleware.CurrentUserId(ctx)
 	var req txIdRequest

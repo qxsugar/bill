@@ -1,0 +1,894 @@
+basePath: /
+definitions:
+  PageBody:
+    properties:
+      limit:
+        description: Limit on the number of items
+        type: integer
+      list:
+        description: Data list
+      offset:
+        description: Offset
+        type: integer
+      total:
+        description: Total number of items
+        type: integer
+    type: object
+  RespBody:
+    properties:
+      code:
+        description: Business status code
+        type: integer
+      desc:
+        description: Exception hints, typically only appear in development mode
+        type: string
+      info:
+        description: Business hints
+        type: string
+      resp_data:
+        description: Returned data
+      succeeded:
+        description: Whether the operation was successful
+        type: boolean
+    type: object
+  kit.TimeStamp:
+    properties:
+      time.Time:
+        type: string
+    type: object
+  model.CardCounts:
+    additionalProperties:
+      type: integer
+    type: object
+  model.CardTracker:
+    properties:
+      counts:
+        $ref: '#/definitions/model.CardCounts'
+      created_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      deck_count:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      user_id:
+        type: integer
+    type: object
+  model.Room:
+    properties:
+      code:
+        type: string
+      created_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      id:
+        type: integer
+      owner_id:
+        type: integer
+      settled_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      status:
+        type: integer
+    type: object
+  model.RoomLog:
+    properties:
+      content:
+        type: string
+      created_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      id:
+        type: integer
+      log_type:
+        type: string
+      room_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  model.User:
+    properties:
+      avatar:
+        type: string
+      created_at:
+        $ref: '#/definitions/kit.TimeStamp'
+      id:
+        type: integer
+      nickname:
+        type: string
+      openid:
+        type: string
+      updated_at:
+        $ref: '#/definitions/kit.TimeStamp'
+    type: object
+  router.adjustRequest:
+    properties:
+      delta:
+        type: integer
+      rank:
+        type: string
+    type: object
+  router.deckRequest:
+    properties:
+      deck_count:
+        type: integer
+    type: object
+  router.expenseItemDTO:
+    properties:
+      amount:
+        type: number
+      to_user_id:
+        type: integer
+    type: object
+  router.expenseRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/router.expenseItemDTO'
+        type: array
+      room_id:
+        type: integer
+    type: object
+  router.joinRequest:
+    properties:
+      code:
+        type: string
+    type: object
+  router.loginRequest:
+    properties:
+      code:
+        type: string
+    type: object
+  router.loginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  router.roomIdRequest:
+    properties:
+      room_id:
+        type: integer
+    type: object
+  router.txIdRequest:
+    properties:
+      tx_id:
+        type: integer
+    type: object
+  router.updateProfileRequest:
+    properties:
+      avatar:
+        type: string
+      nickname:
+        type: string
+    type: object
+  service.MemberView:
+    properties:
+      avatar:
+        type: string
+      balance:
+        type: number
+      is_owner:
+        type: boolean
+      left:
+        type: boolean
+      nickname:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  service.MessageView:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: integer
+      from_name:
+        type: string
+      from_user_id:
+        type: integer
+      id:
+        type: integer
+      text:
+        type: string
+      thanked:
+        type: boolean
+      to_name:
+        type: string
+      to_user_id:
+        type: integer
+    type: object
+  service.RoomSnapshot:
+    properties:
+      members:
+        items:
+          $ref: '#/definitions/service.MemberView'
+        type: array
+      messages:
+        items:
+          $ref: '#/definitions/service.MessageView'
+        type: array
+      room:
+        $ref: '#/definitions/model.Room'
+    type: object
+info:
+  contact:
+    email: qxsugar@gmail.com
+    name: Developer
+    url: https://github.com/qxsugar
+  description: 记账小程序后端 API 文档
+  title: Bill API
+  version: "1.0"
+paths:
+  /api/v1/auth.login:
+    post:
+      consumes:
+      - application/json
+      description: 用微信 code 换取登录态，返回 JWT 与用户信息
+      parameters:
+      - description: 登录请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/router.loginResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      summary: 微信登录
+      tags:
+      - auth
+  /api/v1/card.adjust:
+    post:
+      consumes:
+      - application/json
+      description: 调整某牌面剩余数量：delta=-1 点击扣除，delta=+1 双击增加
+      parameters:
+      - description: 调整请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.adjustRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.CardTracker'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 调整牌面数量
+      tags:
+      - card
+  /api/v1/card.detail:
+    get:
+      description: 返回当前用户记牌器状态（不存在则初始化）
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.CardTracker'
+              type: object
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 记牌器状态
+      tags:
+      - card
+  /api/v1/card.reset:
+    post:
+      description: 按当前牌副数重置
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.CardTracker'
+              type: object
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 重置记牌器
+      tags:
+      - card
+  /api/v1/card.setDeck:
+    post:
+      consumes:
+      - application/json
+      description: 设置牌副数并重置（设置页确认）
+      parameters:
+      - description: 牌副数请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.deckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.CardTracker'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 设置牌副数
+      tags:
+      - card
+  /api/v1/room.create:
+    post:
+      description: 创建房间，当前用户成为房主
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.Room'
+              type: object
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 创建房间
+      tags:
+      - room
+  /api/v1/room.detail:
+    get:
+      description: 返回房间快照（房间 + 成员 + 消息），供进入房间与 ws 推送后拉取
+      parameters:
+      - description: 房间 ID
+        in: query
+        name: room_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/service.RoomSnapshot'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "404":
+          description: 房间不存在
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 房间快照
+      tags:
+      - room
+  /api/v1/room.join:
+    post:
+      consumes:
+      - application/json
+      description: 通过房间码加入房间
+      parameters:
+      - description: 加入房间请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.joinRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.Room'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 加入房间
+      tags:
+      - room
+  /api/v1/room.leave:
+    post:
+      consumes:
+      - application/json
+      description: 离开房间
+      parameters:
+      - description: 房间 ID 请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.roomIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    ok:
+                      type: boolean
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 离开房间
+      tags:
+      - room
+  /api/v1/room.logs:
+    get:
+      description: 分页返回房间日志（从旧到新）
+      parameters:
+      - description: 房间 ID
+        in: query
+        name: room_id
+        required: true
+        type: integer
+      - default: 50
+        description: 分页大小
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 分页偏移
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  allOf:
+                  - $ref: '#/definitions/PageBody'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/model.RoomLog'
+                        type: array
+                    type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 房间日志
+      tags:
+      - room
+  /api/v1/room.settle:
+    post:
+      consumes:
+      - application/json
+      description: 结算房间（仅房主）
+      parameters:
+      - description: 房间 ID 请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.roomIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    ok:
+                      type: boolean
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 结算房间
+      tags:
+      - room
+  /api/v1/transaction.expense:
+    post:
+      consumes:
+      - application/json
+      description: 记录支出。前端三种模式（单笔/均分/统一）均归一为 items 明细列表提交
+      parameters:
+      - description: 支出请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.expenseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    ok:
+                      type: boolean
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 记录支出
+      tags:
+      - transaction
+  /api/v1/transaction.revoke:
+    post:
+      consumes:
+      - application/json
+      description: 撤销自己发出的交易
+      parameters:
+      - description: 交易 ID 请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.txIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    ok:
+                      type: boolean
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 撤销交易
+      tags:
+      - transaction
+  /api/v1/transaction.thank:
+    post:
+      consumes:
+      - application/json
+      description: 对收到的交易发送感谢
+      parameters:
+      - description: 交易 ID 请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.txIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    ok:
+                      type: boolean
+                  type: object
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 感谢交易
+      tags:
+      - transaction
+  /api/v1/user.detail:
+    get:
+      description: 返回当前登录用户的信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 当前用户信息
+      tags:
+      - user
+  /api/v1/user.presetAvatars:
+    get:
+      description: 返回可选的预设头像列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  properties:
+                    avatars:
+                      items:
+                        type: string
+                      type: array
+                  type: object
+              type: object
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 预设头像列表
+      tags:
+      - user
+  /api/v1/user.update:
+    post:
+      consumes:
+      - application/json
+      description: 修改当前用户昵称/头像，昵称与头像至少传一个
+      parameters:
+      - description: 资料更新请求
+        in: body
+        name: reqBody
+        required: true
+        schema:
+          $ref: '#/definitions/router.updateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/RespBody'
+            - properties:
+                resp_data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/RespBody'
+        "401":
+          description: 未登录
+          schema:
+            $ref: '#/definitions/RespBody'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/RespBody'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/RespBody'
+      security:
+      - BearerAuth: []
+      summary: 修改用户资料
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    description: 需登录接口：在请求头携带 "Bearer {token}"
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
