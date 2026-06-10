@@ -41,6 +41,13 @@ page {
   box-sizing: border-box;
 }
 
-* {
+view,
+text,
+button,
+input,
+textarea,
+image,
+scroll-view,
+navigator {
   box-sizing: border-box;
 }
