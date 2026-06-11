@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"errors"
 	"github.com/qxsugar/bill/api/internal/model"
 	"gorm.io/gorm"
 )
@@ -12,7 +13,7 @@ func NewTransactionDao(db *gorm.DB) *TransactionDao { return &TransactionDao{db:
 func (d *TransactionDao) FindById(id int64) (*model.Transaction, error) {
 	var item model.Transaction
 	err := d.db.Where("id = ?", id).First(&item).Error
-	if err == gorm.ErrRecordNotFound {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	if err != nil {

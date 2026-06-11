@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"errors"
 	"github.com/qxsugar/bill/api/internal/model"
 	"gorm.io/gorm"
 )
@@ -17,7 +18,7 @@ func (d *RoomMemberDao) ListByRoomId(roomId int64) ([]*model.RoomMember, error) 
 func (d *RoomMemberDao) FindByRoomAndUser(roomId, userId int64) (*model.RoomMember, error) {
 	var item model.RoomMember
 	err := d.db.Where("room_id = ? and user_id = ?", roomId, userId).First(&item).Error
-	if err == gorm.ErrRecordNotFound {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
 	if err != nil {

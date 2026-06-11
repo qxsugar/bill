@@ -24,4 +24,5 @@ func (d *CardTrackerDao) FindByUserId(userId int64) (*model.CardTracker, error) 
 }
 
 func (d *CardTrackerDao) Create(item *model.CardTracker) error { return d.db.Create(item).Error }
-func (d *CardTrackerDao) Save(item *model.CardTracker) error   { return d.db.Save(item).Error }
+
+func (d *CardTrackerDao) Save(item *model.CardTracker) error { return d.db.Save(item).Error }

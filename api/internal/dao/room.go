@@ -36,4 +36,5 @@ func (d *RoomDao) FindByCode(code string) (*model.Room, error) {
 }
 
 func (d *RoomDao) Create(item *model.Room) error { return d.db.Create(item).Error }
-func (d *RoomDao) Save(item *model.Room) error   { return d.db.Save(item).Error }
+
+func (d *RoomDao) Save(item *model.Room) error { return d.db.Save(item).Error }
