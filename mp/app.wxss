@@ -1,28 +1,52 @@
-/* 全局 CSS 变量 */
+/* ============================================================
+ * 全局设计令牌（靛蓝 + 青 / 现代卡片风）
+ * 所有页面与组件统一引用这些变量，保持风格一致。
+ * ============================================================ */
 page {
-  --color-primary: #4A90E2;
-  --color-primary-dark: #357ABD;
-  --color-secondary: #7ED321;
-  --color-danger: #E74C3C;
-  --color-warning: #F39C12;
+  /* 主题色：靛蓝主色 + 青色点缀 */
+  --color-primary: #3B5BDB;
+  --color-primary-dark: #2F49AF;
+  --color-primary-light: #5C7CFA;
+  --color-primary-soft: #EAEEFD;       /* 主色浅底，用于选中/标签背景 */
+  --color-accent: #15AABF;             /* 青色点缀 */
+  --color-accent-soft: #E3F8FB;
 
-  --color-bg: #F5F5F5;
+  /* 状态色 */
+  --color-success: #2F9E44;            /* 盈利 */
+  --color-success-soft: #E7F6EC;
+  --color-danger: #E03131;             /* 亏损 / 危险 */
+  --color-danger-soft: #FDECEC;
+  --color-warning: #F08C00;
+  --color-warning-soft: #FFF4E2;
+
+  /* 中性色 */
+  --color-bg: #F5F6F8;
   --color-bg-white: #FFFFFF;
   --color-bg-card: #FFFFFF;
+  --color-bg-sunken: #EFF1F5;          /* 卡片内凹槽 / 次级底 */
 
-  --color-text-primary: #333333;
-  --color-text-secondary: #666666;
-  --color-text-placeholder: #AAAAAA;
-  --color-border: #E8E8E8;
+  --color-text-primary: #1F2430;
+  --color-text-secondary: #6B7280;
+  --color-text-placeholder: #ADB2BD;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #ECEEF2;
+  --color-border-strong: #DCE0E8;
 
+  /* 主题渐变（首页头部 / 强调按钮） */
+  --gradient-primary: linear-gradient(135deg, #5C7CFA 0%, #3B5BDB 100%);
+  --gradient-accent: linear-gradient(135deg, #22C3D6 0%, #15AABF 100%);
+
+  /* 字号 */
   --font-size-xs: 20rpx;
   --font-size-sm: 24rpx;
   --font-size-base: 28rpx;
   --font-size-md: 32rpx;
   --font-size-lg: 36rpx;
-  --font-size-xl: 40rpx;
-  --font-size-xxl: 48rpx;
+  --font-size-xl: 44rpx;
+  --font-size-xxl: 56rpx;
+  --font-size-display: 72rpx;
 
+  /* 间距 */
   --spacing-xs: 8rpx;
   --spacing-sm: 16rpx;
   --spacing-base: 24rpx;
@@ -30,14 +54,23 @@ page {
   --spacing-lg: 48rpx;
   --spacing-xl: 64rpx;
 
-  --radius-sm: 8rpx;
-  --radius-base: 12rpx;
-  --radius-lg: 20rpx;
+  /* 圆角 */
+  --radius-sm: 12rpx;
+  --radius-base: 20rpx;
+  --radius-lg: 28rpx;
+  --radius-xl: 36rpx;
   --radius-round: 9999rpx;
+
+  /* 柔和投影（现代卡片） */
+  --shadow-sm: 0 2rpx 8rpx rgba(31, 36, 48, 0.04);
+  --shadow-base: 0 8rpx 24rpx rgba(31, 36, 48, 0.06);
+  --shadow-md: 0 12rpx 32rpx rgba(31, 36, 48, 0.08);
+  --shadow-primary: 0 12rpx 28rpx rgba(59, 91, 219, 0.28);
 
   background-color: var(--color-bg);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
   box-sizing: border-box;
 }
 
@@ -50,4 +83,62 @@ image,
 scroll-view,
 navigator {
   box-sizing: border-box;
+}
+
+/* ---------- 通用卡片 ---------- */
+.card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+  padding: var(--spacing-base);
+}
+
+/* ---------- 通用按钮 ---------- */
+.btn {
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  padding: var(--spacing-base) var(--spacing-md);
+  border: none;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.btn::after { border: none; }
+.btn:active { transform: scale(0.97); opacity: 0.92; }
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-primary);
+}
+.btn-secondary {
+  background: var(--color-bg-white);
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+}
+.btn-ghost {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+.btn-block { width: 100%; }
+
+/* ---------- 文字辅助类 ---------- */
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-placeholder); }
+.amount-earn { color: var(--color-success); font-weight: 700; }
+.amount-lose { color: var(--color-danger); font-weight: 700; }
+
+/* ---------- 通用空状态 ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl) 0;
+  color: var(--color-text-placeholder);
+  font-size: var(--font-size-sm);
 }
