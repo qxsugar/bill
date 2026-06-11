@@ -60,10 +60,6 @@
       <view class="action-icon"><icon name="log" size="44" color="#6B7280" /></view>
       <text>日志</text>
     </view>
-    <view class="action" bindtap="goCardTracker">
-      <view class="action-icon"><icon name="cards" size="44" color="#6B7280" /></view>
-      <text>记牌器</text>
-    </view>
     <view class="action" bindtap="goProfile">
       <view class="action-icon"><icon name="edit" size="44" color="#6B7280" /></view>
       <text>修改</text>

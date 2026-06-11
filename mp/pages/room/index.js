@@ -139,10 +139,6 @@ Page({
     wx.navigateTo({ url: `/pages/room-log/index?room_id=${this.data.roomId}` })
   },
 
-  goCardTracker() {
-    wx.navigateTo({ url: '/pages/card-tracker/index' })
-  },
-
   goProfile() {
     wx.navigateTo({ url: '/pages/profile/index' })
   },
