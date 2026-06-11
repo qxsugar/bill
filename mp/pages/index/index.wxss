@@ -1,17 +1,61 @@
-.container { padding: var(--spacing-base); }
-.header { padding: var(--spacing-xl) 0 var(--spacing-lg); text-align: center; }
-.title { font-size: var(--font-size-xxl); font-weight: bold; color: var(--color-primary); display: block; }
-.subtitle { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--spacing-xs); }
+.container { padding: var(--spacing-base); padding-bottom: calc(110rpx + env(safe-area-inset-bottom) + var(--spacing-base)); }
 
-.notice { display: flex; align-items: center; gap: var(--spacing-sm); background: var(--color-bg-white); border-radius: var(--radius-base); padding: var(--spacing-base); margin-top: var(--spacing-base); }
-.notice-icon { font-size: var(--font-size-md); }
-.notice-text { font-size: var(--font-size-sm); color: var(--color-text-secondary); flex: 1; }
+/* 品牌头部 */
+.hero {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg) var(--spacing-base) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-primary);
+}
+.hero-badge {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+}
+.hero-title { font-size: var(--font-size-xxl); font-weight: 700; color: #fff; letter-spacing: 2rpx; }
+.hero-subtitle { font-size: var(--font-size-sm); color: rgba(255, 255, 255, 0.82); margin-top: var(--spacing-xs); }
 
-.actions { display: flex; flex-direction: column; gap: var(--spacing-base); margin-top: var(--spacing-xl); }
-.btn-primary { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); font-size: var(--font-size-md); padding: var(--spacing-base); border: none; }
-.btn-secondary { background: var(--color-bg-white); color: var(--color-primary); border-radius: var(--radius-lg); font-size: var(--font-size-md); padding: var(--spacing-base); border: 2rpx solid var(--color-primary); }
+/* 公告 */
+.notice { display: flex; align-items: center; gap: var(--spacing-sm); margin-top: var(--spacing-base); padding: var(--spacing-base); }
+.notice-icon {
+  width: 64rpx; height: 64rpx; flex-shrink: 0;
+  border-radius: var(--radius-base);
+  background: var(--color-accent-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.notice-text { font-size: var(--font-size-sm); color: var(--color-text-secondary); flex: 1; line-height: 1.5; }
 
-.tools { display: flex; gap: var(--spacing-base); margin-top: var(--spacing-xl); }
-.tool-item { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs); background: var(--color-bg-white); border-radius: var(--radius-base); padding: var(--spacing-md); min-width: 160rpx; }
-.tool-icon { font-size: 48rpx; }
-.tool-label { font-size: var(--font-size-sm); color: var(--color-text-primary); }
+/* 主操作 */
+.actions { display: flex; flex-direction: column; gap: var(--spacing-base); margin-top: var(--spacing-md); }
+
+/* 分区标题 */
+.section-title { font-size: var(--font-size-base); font-weight: 600; color: var(--color-text-secondary); margin: var(--spacing-lg) var(--spacing-xs) var(--spacing-base); }
+
+/* 工具卡片 */
+.tools { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.tool-card {
+  display: flex; align-items: center; gap: var(--spacing-base);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+  padding: var(--spacing-base);
+  transition: transform 0.15s ease;
+}
+.tool-card:active { transform: scale(0.98); }
+.tool-icon {
+  width: 88rpx; height: 88rpx; flex-shrink: 0;
+  border-radius: var(--radius-base);
+  background: var(--color-primary-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.tool-meta { flex: 1; display: flex; flex-direction: column; gap: 6rpx; }
+.tool-label { font-size: var(--font-size-md); font-weight: 600; color: var(--color-text-primary); }
+.tool-desc { font-size: var(--font-size-sm); color: var(--color-text-placeholder); }

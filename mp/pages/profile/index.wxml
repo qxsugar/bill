@@ -1,13 +1,20 @@
 <view class="container">
-  <view class="avatar-wrap" bindtap="changeAvatar">
+  <!-- 头像卡 -->
+  <view class="avatar-card" bindtap="changeAvatar">
     <user-avatar info="{{userInfo}}" size="large" />
-    <text class="change-tip">点击更换头像</text>
-  </view>
-  <view class="form">
-    <view class="form-item">
-      <text class="label">昵称</text>
-      <input class="input" value="{{userInfo.nickname}}" bindinput="onNicknameInput" placeholder="请输入昵称" />
+    <view class="change-tip">
+      <icon name="edit" size="28" color="#3B5BDB" />
+      <text>点击更换头像</text>
     </view>
   </view>
-  <button class="btn-save" bindtap="saveProfile">保存</button>
+
+  <!-- 表单卡 -->
+  <view class="form-card">
+    <view class="form-item">
+      <text class="label">昵称</text>
+      <input class="input" value="{{userInfo.nickname}}" bindinput="onNicknameInput" placeholder="请输入昵称" placeholder-class="placeholder" />
+    </view>
+  </view>
+
+  <button class="btn btn-primary btn-block save-btn" bindtap="saveProfile" loading="{{saving}}">保存</button>
 </view>

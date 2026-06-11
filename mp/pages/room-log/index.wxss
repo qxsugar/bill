@@ -1,6 +1,18 @@
 .container { padding: var(--spacing-base); height: 100vh; box-sizing: border-box; }
 .log-list { height: 100%; }
-.log-item { padding: var(--spacing-sm) 0; border-bottom: 1rpx solid var(--color-border); display: flex; gap: var(--spacing-sm); align-items: baseline; }
-.log-time { font-size: var(--font-size-xs); color: var(--color-text-placeholder); flex-shrink: 0; }
-.log-content { font-size: var(--font-size-sm); color: var(--color-text-primary); }
-.empty { text-align: center; color: var(--color-text-placeholder); padding: var(--spacing-xl) 0; font-size: var(--font-size-sm); }
+.log-item {
+  display: flex; gap: var(--spacing-sm); align-items: flex-start;
+  padding: var(--spacing-base);
+  background: var(--color-bg-white);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-sm);
+}
+.log-dot {
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: var(--color-primary);
+  margin-top: 8rpx; flex-shrink: 0;
+}
+.log-body { flex: 1; display: flex; flex-direction: column; gap: 6rpx; }
+.log-content { font-size: var(--font-size-sm); color: var(--color-text-primary); line-height: 1.5; }
+.log-time { font-size: var(--font-size-xs); color: var(--color-text-placeholder); }

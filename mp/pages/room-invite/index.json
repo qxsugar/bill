@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "邀请好友"}
+{
+  "navigationBarTitleText": "邀请好友",
+  "usingComponents": {
+    "icon": "/components/icon/index"
+  }
+}

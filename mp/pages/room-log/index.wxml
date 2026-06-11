@@ -2,10 +2,16 @@
   <scroll-view class="log-list" scroll-y enhanced show-scrollbar="{{false}}">
     <block wx:for="{{logs}}" wx:key="id">
       <view class="log-item">
-        <text class="log-time">{{item.time}}</text>
-        <text class="log-content">{{item.content}}</text>
+        <view class="log-dot"></view>
+        <view class="log-body">
+          <text class="log-content">{{item.content}}</text>
+          <text class="log-time">{{item.time}}</text>
+        </view>
       </view>
     </block>
-    <view wx:if="{{!loading && logs.length === 0}}" class="empty">暂无记录</view>
+    <view wx:if="{{!loading && logs.length === 0}}" class="empty-state">
+      <icon name="log" size="72" color="#DCE0E8" />
+      <text>暂无记录</text>
+    </view>
   </scroll-view>
 </view>

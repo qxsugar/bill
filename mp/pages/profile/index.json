@@ -1,1 +1,7 @@
-{"navigationBarTitleText": "个人信息", "usingComponents": {"user-avatar": "/components/user-avatar/index"}}
+{
+  "navigationBarTitleText": "个人信息",
+  "usingComponents": {
+    "icon": "/components/icon/index",
+    "user-avatar": "/components/user-avatar/index"
+  }
+}

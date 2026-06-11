@@ -1,10 +1,14 @@
 <view class="container">
+  <text class="hint">选择一个喜欢的头像</text>
   <view class="avatar-grid">
     <block wx:for="{{avatars}}" wx:key="*this">
       <view class="avatar-item {{selected === item ? 'selected' : ''}}" bindtap="selectAvatar" data-emoji="{{item}}">
         <text class="emoji">{{item}}</text>
+        <view wx:if="{{selected === item}}" class="check">
+          <icon name="check" size="28" color="#FFFFFF" />
+        </view>
       </view>
     </block>
   </view>
-  <button class="btn-confirm" bindtap="confirm">确定</button>
+  <button class="btn btn-primary btn-block" bindtap="confirm">确定</button>
 </view>

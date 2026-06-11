@@ -4,11 +4,11 @@
       <view class="settle-item">
         <user-avatar info="{{item}}" size="medium" />
         <text class="nickname">{{item.nickname}}</text>
-        <text class="amount {{item.balance >= 0 ? 'earn' : 'lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
+        <text class="amount {{item.balance >= 0 ? 'amount-earn' : 'amount-lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
       </view>
     </block>
   </view>
-  <button class="btn-confirm" bindtap="confirmSettle" loading="{{settling}}">
+  <button class="btn btn-primary btn-block" bindtap="confirmSettle" loading="{{settling}}">
     {{isOwner ? '确认结算' : '等待房主结算'}}
   </button>
 </view>

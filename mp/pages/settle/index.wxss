@@ -1,7 +1,12 @@
 .container { padding: var(--spacing-base); }
 .settle-list { margin-bottom: var(--spacing-lg); }
-.settle-item { display: flex; align-items: center; padding: var(--spacing-base); background: var(--color-bg-white); border-radius: var(--radius-base); margin-bottom: var(--spacing-sm); }
-.nickname { flex: 1; margin-left: var(--spacing-sm); font-size: var(--font-size-base); }
-.earn { color: var(--color-secondary); font-weight: bold; }
-.lose { color: var(--color-danger); font-weight: bold; }
-.btn-confirm { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); }
+.settle-item {
+  display: flex; align-items: center;
+  padding: var(--spacing-base);
+  background: var(--color-bg-white);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-sm);
+}
+.nickname { flex: 1; margin-left: var(--spacing-base); font-size: var(--font-size-base); color: var(--color-text-primary); }
+.amount { font-size: var(--font-size-md); }

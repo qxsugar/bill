@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "选择头像"}
+{
+  "navigationBarTitleText": "选择头像",
+  "usingComponents": {
+    "icon": "/components/icon/index"
+  }
+}

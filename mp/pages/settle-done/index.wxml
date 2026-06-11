@@ -1,18 +1,20 @@
 <view class="container">
-  <view class="success-icon">✓</view>
+  <view class="success-badge">
+    <icon name="check" size="72" color="#FFFFFF" stroke="2.4" />
+  </view>
   <text class="success-text">结算完成</text>
 
   <view class="members-list">
     <block wx:for="{{members}}" wx:key="id">
       <view class="member-item">
         <text class="nickname">{{item.nickname}}</text>
-        <text class="balance {{item.balance >= 0 ? 'earn' : 'lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
+        <text class="balance {{item.balance >= 0 ? 'amount-earn' : 'amount-lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
       </view>
     </block>
   </view>
 
   <view class="btns">
-    <button class="btn-outline" bindtap="goLog">查看日志</button>
-    <button class="btn-primary" bindtap="backHome">返回首页</button>
+    <button class="btn btn-secondary" bindtap="goLog">查看日志</button>
+    <button class="btn btn-primary" bindtap="backHome">返回首页</button>
   </view>
 </view>

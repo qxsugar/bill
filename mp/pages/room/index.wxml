@@ -5,16 +5,21 @@
       <view class="members-inner">
         <block wx:for="{{members}}" wx:key="user_id">
           <view class="member" bindtap="onMemberTap" data-user-id="{{item.user_id}}">
-            <user-avatar info="{{item}}" />
-            <text class="member-name">{{item.nickname}}{{item.is_owner ? '(房主)' : ''}}</text>
-            <text class="member-balance {{item.balance >= 0 ? 'earn' : 'lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}¥</text>
+            <view class="member-avatar">
+              <user-avatar info="{{item}}" />
+              <view wx:if="{{item.is_owner}}" class="owner-badge">房主</view>
+            </view>
+            <text class="member-name">{{item.nickname}}</text>
+            <text class="member-balance {{item.balance >= 0 ? 'amount-earn' : 'amount-lose'}}">{{item.balance >= 0 ? '+' : ''}}{{item.balance}}</text>
           </view>
         </block>
       </view>
     </scroll-view>
     <view class="invite-btn" bindtap="goInvite">
-      <text class="invite-icon">＋</text>
-      <text class="invite-label">邀请好友</text>
+      <view class="invite-icon">
+        <icon name="plus" size="40" color="#3B5BDB" />
+      </view>
+      <text class="invite-label">邀请</text>
     </view>
   </view>
 
@@ -24,23 +29,53 @@
       <view class="message">
         <text class="message-text">{{item.text}}</text>
         <view class="message-actions">
-          <text wx:if="{{item.canRevoke}}" class="msg-btn revoke" catchtap="onRevoke" data-id="{{item.id}}">撤销</text>
-          <text wx:if="{{item.canThank}}" class="msg-btn thank" catchtap="onThank" data-id="{{item.id}}">感谢</text>
-          <text wx:if="{{item.thanked}}" class="msg-tag">已感谢</text>
+          <view wx:if="{{item.canRevoke}}" class="msg-btn revoke" catchtap="onRevoke" data-id="{{item.id}}">
+            <icon name="revoke" size="28" color="#E03131" />
+            <text>撤销</text>
+          </view>
+          <view wx:if="{{item.canThank}}" class="msg-btn thank" catchtap="onThank" data-id="{{item.id}}">
+            <icon name="thank" size="28" color="#3B5BDB" />
+            <text>感谢</text>
+          </view>
+          <view wx:if="{{item.thanked}}" class="msg-tag">
+            <icon name="check" size="24" color="#ADB2BD" />
+            <text>已感谢</text>
+          </view>
         </view>
       </view>
     </block>
-    <view wx:if="{{messages.length === 0}}" class="empty">还没有支出记录</view>
+    <view wx:if="{{messages.length === 0}}" class="empty-state">
+      <icon name="log" size="72" color="#DCE0E8" />
+      <text>还没有支出记录</text>
+    </view>
   </scroll-view>
 
   <!-- 底部操作栏 -->
   <view class="action-bar">
-    <view class="action" bindtap="onExpenseTap"><text class="action-icon">💸</text><text>支出</text></view>
-    <view class="action" bindtap="goLog"><text class="action-icon">📋</text><text>日志</text></view>
-    <view class="action" bindtap="goCardTracker"><text class="action-icon">🃏</text><text>记牌器</text></view>
-    <view class="action" bindtap="goProfile"><text class="action-icon">👤</text><text>修改</text></view>
-    <view class="action" bindtap="goSettle"><text class="action-icon">🧮</text><text>结算</text></view>
-    <view class="action" bindtap="onLeave"><text class="action-icon">🚪</text><text>离开</text></view>
+    <view class="action action-accent" bindtap="onExpenseTap">
+      <view class="action-icon"><icon name="expense" size="44" color="#3B5BDB" /></view>
+      <text>支出</text>
+    </view>
+    <view class="action" bindtap="goLog">
+      <view class="action-icon"><icon name="log" size="44" color="#6B7280" /></view>
+      <text>日志</text>
+    </view>
+    <view class="action" bindtap="goCardTracker">
+      <view class="action-icon"><icon name="cards" size="44" color="#6B7280" /></view>
+      <text>记牌器</text>
+    </view>
+    <view class="action" bindtap="goProfile">
+      <view class="action-icon"><icon name="edit" size="44" color="#6B7280" /></view>
+      <text>修改</text>
+    </view>
+    <view class="action" bindtap="goSettle">
+      <view class="action-icon"><icon name="settle" size="44" color="#6B7280" /></view>
+      <text>结算</text>
+    </view>
+    <view class="action" bindtap="onLeave">
+      <view class="action-icon"><icon name="leave" size="44" color="#6B7280" /></view>
+      <text>离开</text>
+    </view>
   </view>
 
   <expense-popup

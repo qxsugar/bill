@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "房间日志"}
+{
+  "navigationBarTitleText": "房间日志",
+  "usingComponents": {
+    "icon": "/components/icon/index"
+  }
+}

@@ -1,23 +1,45 @@
 <view class="container">
-  <view class="header">
-    <text class="title">打牌记账</text>
-    <text class="subtitle">公平记分，不伤感情</text>
+  <!-- 品牌头部：渐变卡片 -->
+  <view class="hero">
+    <view class="hero-badge">
+      <icon name="cards" size="56" color="#FFFFFF" />
+    </view>
+    <text class="hero-title">打牌记账</text>
+    <text class="hero-subtitle">公平记分，不伤感情</text>
   </view>
 
-  <view class="notice">
-    <text class="notice-icon">📢</text>
+  <!-- 公告 -->
+  <view class="notice card">
+    <view class="notice-icon">
+      <icon name="megaphone" size="36" color="#15AABF" />
+    </view>
     <text class="notice-text">{{notice}}</text>
   </view>
 
+  <!-- 主操作 -->
   <view class="actions">
-    <button class="btn-primary" bindtap="createRoom">创建房间</button>
-    <button class="btn-secondary" bindtap="joinRoom">加入房间</button>
+    <button class="btn btn-primary btn-block" bindtap="createRoom">
+      <icon name="plus" size="40" color="#FFFFFF" />
+      创建房间
+    </button>
+    <button class="btn btn-secondary btn-block" bindtap="joinRoom">
+      <icon name="enter" size="40" color="#3B5BDB" />
+      加入房间
+    </button>
   </view>
 
+  <!-- 工具区 -->
+  <view class="section-title">小工具</view>
   <view class="tools">
-    <view class="tool-item" bindtap="goCardTracker">
-      <text class="tool-icon">🃏</text>
-      <text class="tool-label">记牌器</text>
+    <view class="tool-card" bindtap="goCardTracker">
+      <view class="tool-icon">
+        <icon name="cards" size="48" color="#3B5BDB" />
+      </view>
+      <view class="tool-meta">
+        <text class="tool-label">记牌器</text>
+        <text class="tool-desc">实时统计剩余牌张</text>
+      </view>
+      <icon name="enter" size="36" color="#ADB2BD" />
     </view>
   </view>
 </view>

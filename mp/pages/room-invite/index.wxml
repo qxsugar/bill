@@ -1,9 +1,18 @@
 <view class="container">
-  <view class="code-block">
+  <view class="code-card">
     <text class="label">房间码</text>
     <text class="code">{{code}}</text>
+    <text class="tips">将房间码分享给好友，邀请他们加入</text>
   </view>
-  <text class="tips">将房间码分享给好友，邀请他们加入</text>
-  <button class="btn-copy" bindtap="copyCode">复制房间码</button>
-  <button class="btn-share" open-type="share">分享给朋友</button>
+
+  <view class="btns">
+    <button class="btn btn-secondary btn-block" bindtap="copyCode">
+      <icon name="copy" size="40" color="#3B5BDB" />
+      复制房间码
+    </button>
+    <button class="btn btn-primary btn-block" open-type="share">
+      <icon name="share" size="40" color="#FFFFFF" />
+      分享给朋友
+    </button>
+  </view>
 </view>

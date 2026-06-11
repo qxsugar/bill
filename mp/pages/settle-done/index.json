@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "已结算", "usingComponents": {}}
+{
+  "navigationBarTitleText": "已结算",
+  "usingComponents": {
+    "icon": "/components/icon/index"
+  }
+}
