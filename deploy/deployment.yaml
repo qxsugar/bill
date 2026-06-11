@@ -26,6 +26,10 @@ spec:
               value: "wx7bdedd7aa587c5a0"
             - name: BILL_WECHAT_SECRET
               value: "4abc8cbc349f42bd9e669a1218e9a223"
+            - name: BILL_REDIS_ADDR
+              value: "ppapi.cn:6379"
+            - name: BILL_REDIS_PASSWORD
+              value: "jRz6pzFv"
           command:
             - ./app
           ports:
