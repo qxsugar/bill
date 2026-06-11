@@ -33,6 +33,9 @@ func InitializeApplication() (*Application, func(), error) {
 
 	weappClient := weapp.NewClient(rdb)
 
+	asynqOpt := database.NewAsynqRedisOpt()
+	asynqClient, asynqCleanup := database.NewAsynqClient(asynqOpt)
+
 	userDao := dao.NewUserDao(db)
 	roomDao := dao.NewRoomDao(db)
 	memberDao := dao.NewRoomMemberDao(db)
@@ -42,7 +45,7 @@ func InitializeApplication() (*Application, func(), error) {
 
 	userService := service.NewUserService(userDao)
 	authService := service.NewAuthService(userService, weappClient)
-	roomService := service.NewRoomService(db, roomDao, memberDao, logDao, userDao, transactionDao)
+	roomService := service.NewRoomService(db, rdb, asynqClient, roomDao, memberDao, logDao, userDao, transactionDao)
 	transactionService := service.NewTransactionService(db, roomDao, memberDao, transactionDao, logDao, userDao)
 	cardTrackerService := service.NewCardTrackerService(cardTrackerDao)
 
@@ -59,6 +62,7 @@ func InitializeApplication() (*Application, func(), error) {
 
 	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter, transactionRouter, cardTrackerRouter, hub)
 	cleanup := func() {
+		asynqCleanup()
 		redisCleanup()
 		dbCleanup()
 		loggerCleanup()

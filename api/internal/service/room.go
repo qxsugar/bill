@@ -1,13 +1,33 @@
 package service
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"time"
 
+	"github.com/hibiken/asynq"
 	"github.com/qxsugar/bill/api/internal/dao"
 	"github.com/qxsugar/bill/api/internal/model"
 	"github.com/qxsugar/pkg/kit"
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
+
+const (
+	// TaskAutoSettle 房间超时自动结算任务的类型标识。
+	TaskAutoSettle = "room:auto_settle"
+	// roomCodeTTL 房间码在 Redis 中的占位时长，与房间自动结算时限一致。
+	roomCodeTTL = 24 * time.Hour
+	// roomCodeKeyPrefix 房间码占位键前缀。
+	roomCodeKeyPrefix = "bill:room:code:"
+)
+
+// autoSettlePayload room:auto_settle 任务载荷。
+type autoSettlePayload struct {
+	RoomId int64 `json:"room_id"`
+}
 
 // Broadcaster 由 websocket 层实现，房间状态变化时通知房间内所有连接。
 // 用接口解耦，避免 service 依赖 ws 包形成环。
@@ -24,6 +44,8 @@ func (noopBroadcaster) BroadcastSettled(int64)     {}
 
 type RoomService struct {
 	db             *gorm.DB
+	rdb            *redis.Client
+	asynqClient    *asynq.Client
 	roomDao        *dao.RoomDao
 	memberDao      *dao.RoomMemberDao
 	logDao         *dao.RoomLogDao
@@ -34,6 +56,8 @@ type RoomService struct {
 
 func NewRoomService(
 	db *gorm.DB,
+	rdb *redis.Client,
+	asynqClient *asynq.Client,
 	roomDao *dao.RoomDao,
 	memberDao *dao.RoomMemberDao,
 	logDao *dao.RoomLogDao,
@@ -42,6 +66,8 @@ func NewRoomService(
 ) *RoomService {
 	return &RoomService{
 		db:             db,
+		rdb:            rdb,
+		asynqClient:    asynqClient,
 		roomDao:        roomDao,
 		memberDao:      memberDao,
 		logDao:         logDao,
@@ -81,6 +107,9 @@ func (s *RoomService) Create(userId int64) (*model.Room, error) {
 	if u, _ := s.userDao.FindById(userId); u != nil {
 		s.addLog(room.Id, &userId, model.LogTypeJoin, fmt.Sprintf("%s 加入房间", u.Nickname))
 	}
+
+	// 投递 24 小时后自动结算任务，超时未结算时由 worker 兜底结算。
+	s.enqueueAutoSettle(room.Id)
 
 	return room, nil
 }
@@ -177,8 +206,17 @@ func (s *RoomService) Settle(userId, roomId int64) error {
 		return kit.NewFailedPreconditionError().WithInfo("房间已结算")
 	}
 
+	owner, _ := s.userDao.FindById(userId)
+	return s.doSettle(room, &userId, fmt.Sprintf("%s 结算了房间", nameOf(owner)))
+}
+
+// doSettle 执行结算的核心逻辑：标记房间已结算、成员离场、写日志并广播。
+// 调用方负责校验前置条件（如房主权限、是否已结算）。
+// operatorId 为 nil 表示系统自动结算。
+func (s *RoomService) doSettle(room *model.Room, operatorId *int64, logContent string) error {
 	now := nowTime()
-	err = s.db.Transaction(func(tx *gorm.DB) error {
+	roomId := room.Id
+	err := s.db.Transaction(func(tx *gorm.DB) error {
 		settledAt := kit.TimeStamp{Time: now}
 		room.Status = model.RoomStatusSettled
 		room.SettledAt = &settledAt
@@ -191,10 +229,9 @@ func (s *RoomService) Settle(userId, roomId int64) error {
 			Update("left_at", now).Error; err != nil {
 			return err
 		}
-		owner, _ := s.userDao.FindById(userId)
 		return tx.Create(&model.RoomLog{
-			RoomId: roomId, UserId: &userId, LogType: model.LogTypeSettle,
-			Content: fmt.Sprintf("%s 结算了房间", nameOf(owner)),
+			RoomId: roomId, UserId: operatorId, LogType: model.LogTypeSettle,
+			Content: logContent,
 		}).Error
 	})
 	if err != nil {
@@ -225,18 +262,70 @@ func (s *RoomService) Logs(roomId int64, limit, offset int) ([]*model.RoomLog, i
 }
 
 // genUniqueCode 按设计规则生成唯一房间码：4 位（优先两两连号）→ 5 位兜底。
+// 通过 Redis SETNX 原子占位（TTL 24h），避免并发创建撞码；
+// 同时排除数据库中仍存活的同码房间。占位成功返回 true。
 func (s *RoomService) genUniqueCode() (string, error) {
-	exists := func(code string) bool {
-		r, err := s.roomDao.FindByCode(code)
-		return err == nil && r != nil
+	ctx := context.Background()
+	claim := func(code string) bool {
+		// 先排除库中已有同码房间（占位过期但房间仍在的情况）。
+		if r, err := s.roomDao.FindByCode(code); err != nil || r != nil {
+			return false
+		}
+		ok, err := s.rdb.SetNX(ctx, roomCodeKeyPrefix+code, 1, roomCodeTTL).Result()
+		return err == nil && ok
 	}
-	if code := gen4DigitPreferred(exists); code != "" {
+	if code := gen4DigitPreferred(claim); code != "" {
 		return code, nil
 	}
-	if code := gen5Digit(exists); code != "" {
+	if code := gen5Digit(claim); code != "" {
 		return code, nil
 	}
 	return "", kit.NewResourceExhaustedError().WithInfo("房间码已耗尽，请稍后再试")
+}
+
+// enqueueAutoSettle 投递房间超时自动结算任务，24 小时后触发。失败仅记录日志，不阻断创建。
+func (s *RoomService) enqueueAutoSettle(roomId int64) {
+	if s.asynqClient == nil {
+		return
+	}
+	payload, err := json.Marshal(autoSettlePayload{RoomId: roomId})
+	if err != nil {
+		zap.S().Errorf("marshal auto-settle payload failed: room=%d err=%v", roomId, err)
+		return
+	}
+	_, err = s.asynqClient.Enqueue(
+		asynq.NewTask(TaskAutoSettle, payload),
+		asynq.MaxRetry(3),
+		asynq.Queue("default"),
+		asynq.ProcessIn(roomCodeTTL),
+	)
+	if err != nil {
+		zap.S().Errorf("enqueue auto-settle task failed: room=%d err=%v", roomId, err)
+	}
+}
+
+// HandleAutoSettle 处理 room:auto_settle 任务：房间到期仍活跃则自动结算。
+// 幂等：房间已结算或不存在时直接返回，不视为失败。
+func (s *RoomService) HandleAutoSettle(ctx context.Context, task *asynq.Task) error {
+	var p autoSettlePayload
+	if err := json.Unmarshal(task.Payload(), &p); err != nil {
+		// 载荷不可解析，重试也无意义。
+		return fmt.Errorf("unmarshal auto-settle payload: %w: %w", err, asynq.SkipRetry)
+	}
+
+	room, err := s.roomDao.FindById(p.RoomId)
+	if err != nil {
+		return err
+	}
+	if room == nil || room.Status == model.RoomStatusSettled {
+		return nil
+	}
+
+	if err := s.doSettle(room, nil, "房间超过 24 小时未结算，已自动结算"); err != nil {
+		return err
+	}
+	zap.S().Infof("room auto-settled: room=%d", p.RoomId)
+	return nil
 }
 
 // addLog 写入房间日志，忽略错误（日志不应阻断主流程）。

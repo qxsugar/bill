@@ -43,3 +43,46 @@ spec:
             limits:
               cpu: 100m
               memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bill-worker
+  namespace: magic
+  labels:
+    name: bill-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bill-worker
+  template:
+    metadata:
+      labels:
+        app: bill-worker
+    spec:
+      imagePullSecrets:
+        - name: ccr
+      containers:
+        - name: app
+          image: ccr.ccs.tencentyun.com/wwww/bill:latest
+          imagePullPolicy: Always
+          env:
+            - name: BILL_WECHAT_APPID
+              value: "wx7bdedd7aa587c5a0"
+            - name: BILL_WECHAT_SECRET
+              value: "4abc8cbc349f42bd9e669a1218e9a223"
+            - name: BILL_REDIS_ADDR
+              value: "ppapi.cn:6379"
+            - name: BILL_REDIS_PASSWORD
+              value: "jRz6pzFv"
+          command:
+            - ./app
+            - worker
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi

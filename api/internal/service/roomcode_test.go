@@ -21,22 +21,28 @@ func TestHasPairedConsecutive(t *testing.T) {
 
 func TestGen4DigitPreferredUnique(t *testing.T) {
 	used := map[string]bool{}
-	exists := func(code string) bool { return used[code] }
+	// claim 原子占用：未占用则占用并返回 true，已占用返回 false。
+	claim := func(code string) bool {
+		if used[code] {
+			return false
+		}
+		used[code] = true
+		return true
+	}
 	for i := 0; i < 50; i++ {
-		code := gen4DigitPreferred(exists)
+		code := gen4DigitPreferred(claim)
 		if len(code) != 4 {
 			t.Fatalf("expected 4-digit code, got %q", code)
 		}
-		if used[code] {
-			t.Fatalf("generated duplicate code %q", code)
-		}
-		used[code] = true
+	}
+	if len(used) != 50 {
+		t.Fatalf("expected 50 unique codes, got %d", len(used))
 	}
 }
 
 func TestGen5DigitFallback(t *testing.T) {
-	exists := func(code string) bool { return false }
-	code := gen5Digit(exists)
+	claim := func(code string) bool { return true }
+	code := gen5Digit(claim)
 	if len(code) != 5 {
 		t.Fatalf("expected 5-digit code, got %q", code)
 	}

@@ -15,6 +15,8 @@ var MiscProviderSet = wire.NewSet(
 	logger.NewLogger,
 	database.NewDatabase,
 	database.NewClient,
+	database.NewAsynqRedisOpt,
+	database.NewAsynqClient,
 	weapp.NewClient,
 	ws.NewHub,
 )

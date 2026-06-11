@@ -17,30 +17,30 @@ func hasPairedConsecutive(s string) bool {
 
 // gen4DigitPreferred 生成 4 位房间码候选：
 // 优先尝试带「两两连号」的号码，多次失败后退回任意 4 位数。
-// exists 用于判重（已占用返回 true）。返回空串表示放弃 4 位空间。
-func gen4DigitPreferred(exists func(code string) bool) string {
+// claim 用于原子占用：成功占用返回 true。返回空串表示放弃 4 位空间。
+func gen4DigitPreferred(claim func(code string) bool) string {
 	// 先在「含两两连号」的候选里随机尝试。
 	for i := 0; i < 40; i++ {
 		code := randDigits(4)
-		if hasPairedConsecutive(code) && !exists(code) {
+		if hasPairedConsecutive(code) && claim(code) {
 			return code
 		}
 	}
-	// 退而求其次：任意未占用的 4 位数。
+	// 退而求其次：任意可占用的 4 位数。
 	for i := 0; i < 40; i++ {
 		code := randDigits(4)
-		if !exists(code) {
+		if claim(code) {
 			return code
 		}
 	}
 	return ""
 }
 
-// gen5Digit 生成未占用的 5 位房间码（4 位耗尽后使用）。
-func gen5Digit(exists func(code string) bool) string {
+// gen5Digit 生成并占用一个 5 位房间码（4 位耗尽后使用）。
+func gen5Digit(claim func(code string) bool) string {
 	for i := 0; i < 80; i++ {
 		code := randDigits(5)
-		if !exists(code) {
+		if claim(code) {
 			return code
 		}
 	}
