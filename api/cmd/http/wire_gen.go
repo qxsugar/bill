@@ -10,6 +10,7 @@ import (
 	"github.com/qxsugar/bill/api/internal/logger"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
+	"github.com/qxsugar/bill/api/internal/weapp"
 	"github.com/qxsugar/bill/api/internal/ws"
 )
 
@@ -23,6 +24,14 @@ func InitializeApplication() (*Application, func(), error) {
 		loggerCleanup()
 		return nil, nil, err
 	}
+	rdb, redisCleanup, err := database.NewClient()
+	if err != nil {
+		dbCleanup()
+		loggerCleanup()
+		return nil, nil, err
+	}
+
+	weappClient := weapp.NewClient(rdb)
 
 	userDao := dao.NewUserDao(db)
 	roomDao := dao.NewRoomDao(db)
@@ -32,7 +41,7 @@ func InitializeApplication() (*Application, func(), error) {
 	cardTrackerDao := dao.NewCardTrackerDao(db)
 
 	userService := service.NewUserService(userDao)
-	authService := service.NewAuthService(userService)
+	authService := service.NewAuthService(userService, weappClient)
 	roomService := service.NewRoomService(db, roomDao, memberDao, logDao, userDao, transactionDao)
 	transactionService := service.NewTransactionService(db, roomDao, memberDao, transactionDao, logDao, userDao)
 	cardTrackerService := service.NewCardTrackerService(cardTrackerDao)
@@ -50,6 +59,7 @@ func InitializeApplication() (*Application, func(), error) {
 
 	application := NewApplication(log, db, authService, userRouter, authRouter, roomRouter, transactionRouter, cardTrackerRouter, hub)
 	cleanup := func() {
+		redisCleanup()
 		dbCleanup()
 		loggerCleanup()
 	}

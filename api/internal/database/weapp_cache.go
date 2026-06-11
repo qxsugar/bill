@@ -1,11 +1,11 @@
-package redis
+package database
 
 import (
 	"context"
 	"time"
 
-	goredis "github.com/redis/go-redis/v9"
 	weappcache "github.com/medivhzhan/weapp/v3/cache"
+	goredis "github.com/redis/go-redis/v9"
 )
 
 // WeappCache 用 Redis 实现 weapp 的 cache.Cache 接口，

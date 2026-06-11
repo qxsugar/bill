@@ -1,13 +1,11 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/medivhzhan/weapp/v3"
 	"github.com/qxsugar/bill/api/internal/model"
 	"github.com/spf13/viper"
 )
@@ -15,10 +13,11 @@ import (
 // AuthService 负责微信登录（code2session）与 JWT 签发/校验。
 type AuthService struct {
 	userService *UserService
+	weappClient *weapp.Client
 }
 
-func NewAuthService(userService *UserService) *AuthService {
-	return &AuthService{userService: userService}
+func NewAuthService(userService *UserService, weappClient *weapp.Client) *AuthService {
+	return &AuthService{userService: userService, weappClient: weappClient}
 }
 
 // claims 自定义 JWT 载荷，携带用户 id 与 openid。
@@ -26,15 +25,6 @@ type claims struct {
 	UserId int64  `json:"uid"`
 	Openid string `json:"openid"`
 	jwt.RegisteredClaims
-}
-
-// code2sessionResp 微信 jscode2session 返回结构。
-type code2sessionResp struct {
-	Openid     string `json:"openid"`
-	SessionKey string `json:"session_key"`
-	UnionId    string `json:"unionid"`
-	ErrCode    int    `json:"errcode"`
-	ErrMsg     string `json:"errmsg"`
 }
 
 // LoginByCode 用微信 code 换 openid（配置缺失时走 dev 兜底），
@@ -59,38 +49,22 @@ func (s *AuthService) LoginByCode(code string) (string, *model.User, error) {
 
 // code2openid 调用微信接口换取 openid；未配置 appid/secret 时返回 dev 兜底 openid。
 func (s *AuthService) code2openid(code string) (string, error) {
-	appid := viper.GetString("wechat.appid")
-	secret := viper.GetString("wechat.secret")
-	if appid == "" || secret == "" {
+	if s.weappClient == nil {
 		// dev 兜底：同一个 code 稳定映射到同一个 openid，方便本地联调。
 		return "dev_" + code, nil
 	}
 
-	endpoint := "https://api.weixin.qq.com/sns/jscode2session"
-	query := url.Values{}
-	query.Set("appid", appid)
-	query.Set("secret", secret)
-	query.Set("js_code", code)
-	query.Set("grant_type", "authorization_code")
-
-	cli := &http.Client{Timeout: 5 * time.Second}
-	resp, err := cli.Get(endpoint + "?" + query.Encode())
+	res, err := s.weappClient.Login(code)
 	if err != nil {
 		return "", err
 	}
-	defer func() { _ = resp.Body.Close() }()
-
-	var body code2sessionResp
-	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		return "", err
+	if res.ErrCode != 0 {
+		return "", fmt.Errorf("wechat code2session failed: %d %s", res.ErrCode, res.ErrMSG)
 	}
-	if body.ErrCode != 0 {
-		return "", fmt.Errorf("wechat code2session failed: %d %s", body.ErrCode, body.ErrMsg)
-	}
-	if body.Openid == "" {
+	if res.OpenID == "" {
 		return "", fmt.Errorf("wechat code2session returned empty openid")
 	}
-	return body.Openid, nil
+	return res.OpenID, nil
 }
 
 // signToken 按配置的密钥与有效期签发 JWT。

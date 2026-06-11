@@ -7,12 +7,15 @@ import (
 	"github.com/qxsugar/bill/api/internal/logger"
 	"github.com/qxsugar/bill/api/internal/router"
 	"github.com/qxsugar/bill/api/internal/service"
+	"github.com/qxsugar/bill/api/internal/weapp"
 	"github.com/qxsugar/bill/api/internal/ws"
 )
 
 var MiscProviderSet = wire.NewSet(
 	logger.NewLogger,
 	database.NewDatabase,
+	database.NewClient,
+	weapp.NewClient,
 	ws.NewHub,
 )
 
