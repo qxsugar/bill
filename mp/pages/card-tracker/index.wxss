@@ -1,19 +1,60 @@
 .container { display: flex; flex-direction: column; min-height: 100vh; padding: var(--spacing-base); box-sizing: border-box; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-base); }
-.remaining { font-size: var(--font-size-lg); font-weight: bold; }
-.header-btns { display: flex; gap: var(--spacing-sm); }
-.icon-btn { padding: 8rpx var(--spacing-sm); background: var(--color-bg-white); border-radius: var(--radius-base); font-size: var(--font-size-sm); }
-.icon-btn.danger { color: var(--color-danger); }
-.card-grid { display: flex; flex-wrap: wrap; gap: 12rpx; }
-.card-cell { width: calc(20% - 10rpx); display: flex; flex-direction: column; align-items: center; background: var(--color-bg-white); border-radius: var(--radius-base); padding: var(--spacing-sm) 0; }
-.card-cell.exhausted { opacity: 0.35; }
-.card-display { font-size: var(--font-size-lg); font-weight: bold; }
-.card-count { font-size: 22rpx; color: var(--color-text-placeholder); margin-top: 4rpx; }
-.hint { text-align: center; font-size: var(--font-size-xs); color: var(--color-text-placeholder); margin-top: var(--spacing-base); }
-.mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 10; }
-.mask.show { opacity: 1; pointer-events: auto; }
-.setting-sheet { position: fixed; bottom: -400rpx; left: 0; right: 0; background: #fff; border-radius: 24rpx 24rpx 0 0; padding: var(--spacing-lg); transition: bottom 0.3s; z-index: 11; }
-.setting-sheet.show { bottom: 0; }
-.sheet-title { display: block; font-size: var(--font-size-lg); font-weight: bold; margin-bottom: var(--spacing-base); text-align: center; }
-.deck-input { border: 2rpx solid var(--color-border); border-radius: var(--radius-base); padding: var(--spacing-sm); text-align: center; font-size: var(--font-size-lg); width: 100%; margin-bottom: var(--spacing-base); box-sizing: border-box; }
-.btn-ok { background: var(--color-primary); color: #fff; border-radius: var(--radius-lg); }
+
+/* 剩余统计卡 */
+.stat-card {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md) var(--spacing-base);
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: var(--shadow-primary);
+}
+.stat-main { display: flex; align-items: baseline; gap: var(--spacing-xs); }
+.stat-num { font-size: var(--font-size-display); font-weight: 700; color: #fff; line-height: 1; }
+.stat-unit { font-size: var(--font-size-base); color: rgba(255, 255, 255, 0.82); }
+.stat-deck {
+  font-size: var(--font-size-sm); color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 8rpx 20rpx; border-radius: var(--radius-round);
+}
+
+/* 工具栏 */
+.toolbar { display: flex; gap: var(--spacing-sm); margin: var(--spacing-base) 0; }
+.tool-picker { flex: 1; }
+.tool-picker .tool-btn { width: 100%; }
+.tool-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--spacing-xs);
+  background: var(--color-bg-white);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-sm) 0;
+  font-size: var(--font-size-sm); color: var(--color-text-primary);
+}
+.tool-btn:active { transform: scale(0.97); }
+.tool-btn.danger { color: var(--color-danger); }
+
+/* 牌面网格 */
+.card-grid { display: flex; flex-wrap: wrap; gap: 14rpx; }
+.card-cell {
+  width: calc(20% - 12rpx);
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--color-bg-white);
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-sm) 0 12rpx;
+  transition: transform 0.12s ease;
+}
+.card-cell:active { transform: scale(0.94); }
+.card-cell.exhausted { opacity: 0.4; }
+.card-display { font-size: var(--font-size-lg); font-weight: 700; color: var(--color-text-primary); }
+.card-progress {
+  width: 64%; height: 6rpx; border-radius: var(--radius-round);
+  background: var(--color-bg-sunken); overflow: hidden; margin: 8rpx 0 6rpx;
+}
+.card-progress-bar { height: 100%; background: var(--color-primary); border-radius: var(--radius-round); transition: width 0.2s ease; }
+.card-count { font-size: 22rpx; color: var(--color-text-placeholder); }
+
+.hint {
+  display: flex; align-items: center; justify-content: center; gap: var(--spacing-xs);
+  font-size: var(--font-size-xs); color: var(--color-text-placeholder);
+  margin-top: var(--spacing-base);
+}

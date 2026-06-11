@@ -9,9 +9,9 @@ Page({
     cards: [],
     deckCount: 1,
     remaining: 0,
-    settingVisible: false,
-    deckInput: 1,
     tapRank: null,
+    deckOptions: ['1 副牌', '2 副牌', '3 副牌', '4 副牌', '5 副牌', '6 副牌', '7 副牌', '8 副牌', '9 副牌', '10 副牌'],
+    deckIndex: 0,
   },
 
   onLoad() { this.loadData() },
@@ -36,7 +36,7 @@ Page({
       const max = (r === 'BJ' || r === 'SJ') ? deckCount : 4 * deckCount
       return { rank: r, display: DISPLAY[r] || r, count, max }
     })
-    this.setData({ cards, deckCount, remaining })
+    this.setData({ cards, deckCount, remaining, deckIndex: deckCount - 1 })
   },
 
   // 单击扣减，快速双击归还（250ms 内第二次视为双击）
@@ -76,17 +76,13 @@ Page({
     }
   },
 
-  showSetting() { this.setData({ settingVisible: true, deckInput: this.data.deckCount }) },
-  closeSetting() { this.setData({ settingVisible: false }) },
-  onDeckInput(e) { this.setData({ deckInput: parseInt(e.detail.value, 10) || 1 }) },
-
-  async confirmSetting() {
-    const n = this.data.deckInput
-    if (n < 1 || n > 10) return wx.showToast({ title: '牌副数需在 1-10 之间', icon: 'none' })
+  // 设置牌副数：系统滚动选择器选 1-10
+  async onDeckChange(e) {
+    const n = parseInt(e.detail.value, 10) + 1
+    if (n === this.data.deckCount) return
     try {
       const t = await api.cardSetDeck(n)
       this.renderState(t)
-      this.setData({ settingVisible: false })
     } catch (e) {
       wx.showToast({ title: e.message || '设置失败', icon: 'none' })
     }

@@ -1,9 +1,23 @@
 <view class="container">
-  <view class="header">
-    <text class="remaining">剩余 {{remaining}} 张</text>
-    <view class="header-btns">
-      <view class="icon-btn" bindtap="showSetting">设置</view>
-      <view class="icon-btn danger" bindtap="resetCards">重置</view>
+  <!-- 剩余统计卡 -->
+  <view class="stat-card">
+    <view class="stat-main">
+      <text class="stat-num">{{remaining}}</text>
+      <text class="stat-unit">张剩余</text>
+    </view>
+    <view class="stat-deck">{{deckCount}} 副牌</view>
+  </view>
+
+  <view class="toolbar">
+    <picker class="tool-picker" mode="selector" range="{{deckOptions}}" value="{{deckIndex}}" bindchange="onDeckChange">
+      <view class="tool-btn">
+        <icon name="settings" size="36" color="#3B5BDB" />
+        <text>设置</text>
+      </view>
+    </picker>
+    <view class="tool-btn danger" bindtap="resetCards">
+      <icon name="reset" size="36" color="#E03131" />
+      <text>重置</text>
     </view>
   </view>
 
@@ -11,17 +25,16 @@
     <block wx:for="{{cards}}" wx:key="rank">
       <view class="card-cell {{item.count === 0 ? 'exhausted' : ''}}" bindtap="onCardTap" data-rank="{{item.rank}}">
         <text class="card-display">{{item.display}}</text>
+        <view class="card-progress">
+          <view class="card-progress-bar" style="width:{{item.count / item.max * 100}}%"></view>
+        </view>
         <text class="card-count">{{item.count}}/{{item.max}}</text>
       </view>
     </block>
   </view>
 
-  <text class="hint">单击 -1，快速双击 +1</text>
-
-  <view class="mask {{settingVisible ? 'show' : ''}}" catchtap="closeSetting" />
-  <view class="setting-sheet {{settingVisible ? 'show' : ''}}">
-    <text class="sheet-title">设置牌副数</text>
-    <input class="deck-input" type="number" value="{{deckInput}}" bindinput="onDeckInput" placeholder="1-10" />
-    <button class="btn-ok" bindtap="confirmSetting">确定</button>
+  <view class="hint">
+    <icon name="expense" size="28" color="#ADB2BD" />
+    <text>单击 -1，快速双击 +1</text>
   </view>
 </view>

@@ -1,1 +1,6 @@
-{"navigationBarTitleText": "记牌"}
+{
+  "navigationBarTitleText": "记牌器",
+  "usingComponents": {
+    "icon": "../../components/icon/index"
+  }
+}
